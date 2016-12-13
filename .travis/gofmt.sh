@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -eu
+
 if [ "x`go fmt ./...`" = "x" ]
 then
 	echo 'Go code is formatted properly! Hooray!' >&2
