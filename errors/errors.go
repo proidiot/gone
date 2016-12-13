@@ -32,5 +32,3 @@ type New string
 func (e New) Error() string {
 	return string(e)
 }
-
-

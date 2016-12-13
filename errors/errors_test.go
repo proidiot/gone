@@ -36,4 +36,3 @@ func TestErrors(t *testing.T) {
 		assert.Equal(t, e.Error(), k)
 	}
 }
-
