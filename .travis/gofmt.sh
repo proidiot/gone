@@ -1,7 +1,5 @@
 #!/bin/sh
 
-cd `dirname $0`
-
 if [ "x`go fmt ./...`" = "x" ]
 then
 	echo 'Go code is formatted properly! Hooray!' >&2
