@@ -1,4 +1,4 @@
-// This is intended to practically replace the default errors package.
+// Package errors is intended to basically replace the default errors package.
 // It is intended that one could replace an error import with an import of this
 // package instead and code should (hopefully) not have to change as a result.
 // In exchange, this slight tweak allows for error constants instead of just
