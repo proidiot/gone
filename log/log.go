@@ -13,8 +13,15 @@ type logData struct {
 	m string
 }
 
-var l chan<- logData
-var lCtrl chan<-
+type logSettings struct {
+	pid bool
+	cons bool
+	delay bool
+
+}
+
+var log chan<- *logData
+var logControl chan<- *logSettings
 var syslogger *syslog.Writer
 
 // Flags
