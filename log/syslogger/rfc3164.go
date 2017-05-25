@@ -10,9 +10,9 @@ import (
 
 type Rfc3164 struct {
 	Syslogger Syslogger
-	Facility pri.Facility
-	Ident *string
-	Pid bool
+	Facility  pri.Facility
+	Ident     *string
+	Pid       bool
 }
 
 func (r Rfc3164) Syslog(p pri.Priority, msg interface{}) error {
@@ -20,8 +20,8 @@ func (r Rfc3164) Syslog(p pri.Priority, msg interface{}) error {
 	if !goodType {
 		return errors.New(
 			"The syslogger.Rfc3164 expects the message argument" +
-			" to be a string, but the given message does not" +
-			" have the string type.",
+				" to be a string, but the given message does" +
+				" not have the string type.",
 		)
 	}
 
@@ -70,10 +70,10 @@ func (r Rfc3164) Syslog(p pri.Priority, msg interface{}) error {
 	if l := len([]byte(res)); l > 1024 {
 		return errors.New(
 			fmt.Sprintf(
-				"The maximum total length of an RFC3164" +
-				" syslog message is 1024 bytes, but the" +
-				" generated syslog message has total length" +
-				" %d bytes.",
+				"The maximum total length of an RFC3164"+
+					" syslog message is 1024 bytes, but"+
+					" the generated syslog message has"+
+					" total length %d bytes.",
 				l,
 			),
 		)

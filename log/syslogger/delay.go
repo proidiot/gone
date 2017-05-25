@@ -10,9 +10,9 @@ type sysloggerHandle struct {
 }
 
 type Delay struct {
-	h *sysloggerHandle
+	h  *sysloggerHandle
 	cb func() (Syslogger, error)
-	x *sync.Mutex
+	x  *sync.Mutex
 }
 
 func (d Delay) Syslog(p pri.Priority, msg interface{}) error {

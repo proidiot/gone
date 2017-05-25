@@ -21,8 +21,8 @@ func (w Writer) Syslog(p pri.Priority, msg interface{}) error {
 	default:
 		return errors.New(
 			"The basic *syslogger.Writer does not support" +
-			" message typesother than string and []byte, but the" +
-			" given message has a different type.",
+				" message typesother than string and []byte," +
+				" but the given message has a different type.",
 		)
 	}
 }

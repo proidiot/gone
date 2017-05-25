@@ -61,10 +61,10 @@ const (
 
 	InvalidFacility = errors.New(
 		"A pri.Facility can only have one of the 24 values from" +
-		" pri.Kern through pri.Local7. The acceptable values are" +
-		" described at length by both RFC 3164 and RFC 5424," +
-		" and these constants are listed at:" +
-		" https://godoc.org/github.com/proidiot/gone/log/pri",
+			" pri.Kern through pri.Local7. The acceptable values" +
+			" are described at length by both RFC3164 and" +
+			" RFC5424, and these constants are listed at:" +
+			" https://godoc.org/github.com/proidiot/gone/log/pri",
 	)
 )
 

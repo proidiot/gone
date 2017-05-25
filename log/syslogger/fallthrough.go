@@ -5,7 +5,7 @@ import (
 )
 
 type Fallthrough struct {
-	Default Syslogger
+	Default     Syslogger
 	Fallthrough Syslogger
 }
 

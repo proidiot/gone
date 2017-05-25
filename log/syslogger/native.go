@@ -17,24 +17,27 @@ func (n NativeSyslog) Syslog(p pri.Priority, msg interface{}) error {
 	if !goodType {
 		return errors.New(
 			"The native Go log/syslog system only accepts" +
-			" strings as a message, but a non-string message was" +
-			" given.",
+				" strings as a message, but a non-string" +
+				" message was given.",
 		)
 	}
 
 	if p.Facility != 0x00 && p.Facility != n.f {
 		return errors.New(
 			fmt.Sprintf(
-				"The native Go log/syslog system does not" +
-				" provide a mechanism for changing log" +
-				" facilities of an existing *syslog.Writer," +
-				" but the pri.Facility this" +
-				" *syslogger.NativeSyslog was created with" +
-				" does not match the pri.Facility component" +
-				" of the given pr.Priority. This" +
-				" *syslogger.NativeSyslog was created with" +
-				" pri.Facility %s, but the given" +
-				" pri.Priority argument has pri.Facility: %s",
+				"The native Go log/syslog system does not"+
+					" provide a mechanism for changing"+
+					" log facilities of an existing"+
+					" *syslog.Writer, but the"+
+					" pri.Facility this"+
+					" *syslogger.NativeSyslog was"+
+					" created with does not match the"+
+					" pri.Facility component of the"+
+					" given pr.Priority. This"+
+					" *syslogger.NativeSyslog was"+
+					" created with pri.Facility %s, but"+
+					" the given pri.Priority argument"+
+					" has pri.Facility: %s",
 				n.f,
 				p.Facility,
 			),
@@ -61,8 +64,8 @@ func (n NativeSyslog) Syslog(p pri.Priority, msg interface{}) error {
 	default:
 		return errors.New(
 			fmt.Sprintf(
-				"The given pri.Priority argument has an" +
-				" invalid pri.Severity component: %s",
+				"The given pri.Priority argument has an"+
+					" invalid pri.Severity component: %s",
 				p.Severity,
 			),
 		)

@@ -15,7 +15,7 @@ func (c DevConsole) Syslog(p pri.Priority, msg interface{}) error {
 	if c.w.Writer == nil {
 		return errors.New(
 			"The *syslogger.DevConsole must be initialized" +
-			" before use.",
+				" before use.",
 		)
 	}
 
@@ -27,7 +27,7 @@ func (c DevConsole) Close() error {
 }
 
 func NewDevConsole() (DevConsole, error) {
-	f, e := os.OpenFile("/dev/console", os.O_APPEND | os.O_WRONLY, 0600)
+	f, e := os.OpenFile("/dev/console", os.O_APPEND|os.O_WRONLY, 0600)
 	if e != nil {
 		return DevConsole{}, e
 	}

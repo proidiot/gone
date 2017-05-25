@@ -10,9 +10,9 @@ import (
 
 type HumanReadable struct {
 	Syslogger Syslogger
-	Facility pri.Facility
-	Ident string
-	Pid bool
+	Facility  pri.Facility
+	Ident     string
+	Pid       bool
 }
 
 func (h HumanReadable) Syslog(p pri.Priority, msg interface{}) error {
@@ -27,14 +27,15 @@ func (h HumanReadable) Syslog(p pri.Priority, msg interface{}) error {
 	default:
 		return errors.New(
 			"The *syslogger.HumanReadable expects the message" +
-			" argument to have the type string, fmt.Stringer, or" +
-			" error, but the given message argument does not" +
-			" have one of these types.",
+				" argument to have the type string," +
+				" fmt.Stringer, or error, but the given" +
+				" message argument does not have one of" +
+				" these types.",
 		)
 	}
 
 	facility := p.Facility
-	if facility.Valid() != nil || facility == 0x00{
+	if facility.Valid() != nil || facility == 0x00 {
 		if h.Facility == 0x00 {
 			facility = pri.User
 		} else {
