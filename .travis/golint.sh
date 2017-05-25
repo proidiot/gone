@@ -2,11 +2,19 @@
 
 set -eu
 
-if [ "x`golint ./...`" = "x" ]
-then
-	echo 'Go code passed the linter! Hooray!' >&2
-else
-	echo 'Go code does not pass lint. Please run: golint ./...' >&2
-	exit 1
-fi
+golint ./... | awk '
+/./ {
+	if (!found) {
+		found = 1
+		print "The following issues were reported by golint:"
+	}
+	print
+}
+END {
+	if (found) {
+		exit 1
+	} else {
+		print "No golint issues."
+	}
+}'
 
