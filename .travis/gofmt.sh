@@ -2,11 +2,24 @@
 
 set -eu
 
-if [ "x`go fmt ./...`" = "x" ]
-then
-	echo 'Go code is formatted properly! Hooray!' >&2
-else
-	echo 'Go code is not formatted properly. Please run: go fmt ./...' >&2
-	exit 1
-fi
+(
+for f in `find . -name '*.go'`
+do
+	gofmt -l -s ${f}
+done
+) | awk '
+/./ {
+	if (!found) {
+		found = 1
+		print "The following files have gofmt issues:"
+	}
+	print
+}
+END {
+	if (found) {
+		exit 1
+	} else {
+		print "No gofmt issues."
+	}
+}'
 
