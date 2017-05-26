@@ -73,5 +73,5 @@ func (h HumanReadable) Syslog(p pri.Priority, msg interface{}) error {
 		s,
 	)
 
-	return h.Syslogger.Syslog(p, m)
+	return h.Syslogger.Syslog(pri.Priority{}, m)
 }

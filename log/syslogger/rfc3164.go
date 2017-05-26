@@ -11,7 +11,7 @@ import (
 type Rfc3164 struct {
 	Syslogger Syslogger
 	Facility  pri.Facility
-	Ident     *string
+	Ident     string
 	Pid       bool
 }
 
@@ -44,9 +44,9 @@ func (r Rfc3164) Syslog(p pri.Priority, msg interface{}) error {
 		hostname = "localhost"
 	}
 
-	tag := os.Args[0]
-	if r.Ident != nil {
-		tag = *r.Ident
+	tag := r.Ident
+	if tag == "" {
+		tag = os.Args[0]
 	}
 
 	pid := ""
@@ -79,5 +79,5 @@ func (r Rfc3164) Syslog(p pri.Priority, msg interface{}) error {
 		)
 	}
 
-	return r.Syslogger.Syslog(p, res)
+	return r.Syslogger.Syslog(pri.Priority{}, res)
 }

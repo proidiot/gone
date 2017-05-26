@@ -44,7 +44,7 @@ func (n NativeSyslog) Syslog(p pri.Priority, msg interface{}) error {
 		)
 	}
 
-	switch p.Severity {
+	switch p.Severity.Masked() {
 	case pri.Emerg:
 		return n.w.Emerg(m)
 	case pri.Alert:
@@ -72,44 +72,48 @@ func (n NativeSyslog) Syslog(p pri.Priority, msg interface{}) error {
 	}
 }
 
-func NewNativeSyslog(p pri.Priority, ident string) (NativeSyslog, error) {
-	if e := p.Facility.Valid(); e != nil {
-		return nil, e
+func (n NativeSyslog) Close() error {
+	return n.w.Close()
+}
+
+func NewNativeSyslog(f pri.Facility, ident string) (NativeSyslog, error) {
+	if e := f.Valid(); e != nil {
+		return NativeSyslog{}, e
 	}
 
-	w, e := syslog.New(syslog.Priority(p.Facility.Masked()), ident)
+	w, e := syslog.New(syslog.Priority(f.Masked()), ident)
 	if e != nil {
-		return nil, e
+		return NativeSyslog{}, e
 	}
 
 	return NativeSyslog{
 		w,
-		p.Facility,
+		f,
 	}, nil
 }
 
 func DialNativeSyslog(
 	network string,
 	raddr string,
-	p pri.Priority,
+	f pri.Facility,
 	ident string,
 ) (NativeSyslog, error) {
-	if e := p.Facility.Valid(); e != nil {
-		return nil, e
+	if e := f.Valid(); e != nil {
+		return NativeSyslog{}, e
 	}
 
 	w, e := syslog.Dial(
 		network,
 		raddr,
-		syslog.Priority(p.Facility.Masked()),
+		syslog.Priority(f.Masked()),
 		ident,
 	)
 	if e != nil {
-		return nil, e
+		return NativeSyslog{}, e
 	}
 
 	return NativeSyslog{
 		w,
-		p.Facility,
+		f,
 	}, nil
 }

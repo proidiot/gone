@@ -32,12 +32,6 @@ func (d Delay) Syslog(p pri.Priority, msg interface{}) error {
 	return h.s.Syslog(p, msg)
 }
 
-func (d Delay) Reset() {
-	d.x.Lock()
-	defer d.x.Unlock()
-	d.h = nil
-}
-
 func NewDelay(cb func() (Syslogger, error)) Delay {
 	return Delay{
 		cb: cb,
