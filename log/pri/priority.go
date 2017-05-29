@@ -1,4 +1,3 @@
-//go:generate stringer -type Facility
 package pri
 
 import (
