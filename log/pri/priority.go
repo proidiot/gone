@@ -2,6 +2,7 @@
 package pri
 
 import (
+	"fmt"
 	"github.com/proidiot/gone/errors"
 	"os"
 )
@@ -101,6 +102,15 @@ const (
 
 	// Local7 represents messages designated as local use 7.
 	Local7 Priority = (23 * 8)
+
+	InvalidFacility = errors.New(
+		"The facility portion of a pri.Priority can only have one of" +
+			" the 24 values from pri.Kern through pri.Local7." +
+			" The acceptable values are described at length by" +
+			" both RFC3164 and RFC5424, and these constants are" +
+			" listed at:" +
+			" https://godoc.org/github.com/proidiot/gone/log/pri",
+	)
 )
 
 var lookupFacility = map[Priority]string{
@@ -144,7 +154,7 @@ var lookupSeverity = map[Priority]string{
 func (p Priority) Facility() Priority {
 	// Equivalent to pri.Kern | pri.User | ... | pri.Local7
 	mask := Priority(0xF8)
-	return f & mask
+	return p & mask
 }
 
 func (p Priority) ValidFacility() error {
@@ -158,13 +168,17 @@ func (p Priority) ValidFacility() error {
 func (p Priority) Severity() Priority {
 	// Equivalent to LOG_EMERG | LOG_ALERT | ... | LOG_DEBUG
 	mask := Priority(0x07)
-	return s & mask
+	return p & mask
 }
 
 func (p Priority) String() string {
 	res := ""
 	if p.Facility() != 0 {
-		res += lookupFacility[p.Facility()]
+		if fstring, present := lookupFacility[p.Facility()]; present {
+			res += fstring
+		} else {
+			res += fmt.Sprintf("Priority(%#x)", byte(p.Facility()))
+		}
 
 		if p.Severity() != 0 {
 			res += "|"
@@ -179,8 +193,6 @@ func (p Priority) String() string {
 }
 
 func GetFromEnv() Priority {
-	value := ""
-
 	if val, set := os.LookupEnv("LOG_FACILITY"); set {
 		for p, pstring := range lookupFacility {
 			if pstring == val {
