@@ -10,25 +10,25 @@ import (
 
 func TestMaskUpTo(t *testing.T) {
 	type testCase struct {
-		input pri.Priority
+		input    pri.Priority
 		expected Mask
 	}
 
 	tests := map[string]testCase{
 		"zero value input gives non-zero value outpu": {
-			input: pri.Priority(0x0),
+			input:    pri.Priority(0x0),
 			expected: Mask(0x01),
 		},
 		"max input gives max output": {
-			input: pri.Priority(0xFF),
+			input:    pri.Priority(0xFF),
 			expected: Mask(0xFF),
 		},
 		"specific input gives specific output": {
-			input: pri.Err,
+			input:    pri.Err,
 			expected: Err | Crit | Alert | Emerg,
 		},
 		"facility does not effect output": {
-			input: pri.Ntp | pri.Crit,
+			input:    pri.Ntp | pri.Crit,
 			expected: Crit | Alert | Emerg,
 		},
 	}
@@ -49,42 +49,42 @@ func TestMaskUpTo(t *testing.T) {
 }
 
 func TestMaskMasked(t *testing.T) {
-	type testCase struct{
+	type testCase struct {
 		inputMask Mask
-		inputPri pri.Priority
-		expected bool
+		inputPri  pri.Priority
+		expected  bool
 	}
 
 	tests := map[string]testCase{
 		"zero mask hides everything": {
 			inputMask: Mask(0x0),
-			inputPri: pri.Emerg,
-			expected: false,
+			inputPri:  pri.Emerg,
+			expected:  false,
 		},
 		"full mask hides nothing": {
 			inputMask: Mask(0xFF),
-			inputPri: pri.Debug,
-			expected: true,
+			inputPri:  pri.Debug,
+			expected:  true,
 		},
 		"specific mask allows specific level": {
 			inputMask: Warning,
-			inputPri: pri.Warning,
-			expected: true,
+			inputPri:  pri.Warning,
+			expected:  true,
 		},
 		"mask doesn't imply lower masks": {
 			inputMask: Crit,
-			inputPri: pri.Alert,
-			expected: false,
+			inputPri:  pri.Alert,
+			expected:  false,
 		},
 		"bitwise or of mask doesn't imply bitwise or of priority": {
 			inputMask: Alert | Crit,
-			inputPri: pri.Err,
-			expected: false,
+			inputPri:  pri.Err,
+			expected:  false,
 		},
 		"compound mask allows constituents": {
 			inputMask: Err | Warning | Notice,
-			inputPri: pri.Warning,
-			expected: true,
+			inputPri:  pri.Warning,
+			expected:  true,
 		},
 	}
 
@@ -105,29 +105,29 @@ func TestMaskMasked(t *testing.T) {
 
 func TestMaskString(t *testing.T) {
 	type testCase struct {
-		input Mask
+		input    Mask
 		expected string
 	}
 
 	tests := map[string]testCase{
 		"zero value": {
-			input: Mask(0x00),
+			input:    Mask(0x00),
 			expected: "LOG_MASK(0x0)",
 		},
 		"full value": {
-			input: Mask(0xFF),
+			input:    Mask(0xFF),
 			expected: "LOG_UPTO(LOG_DEBUG)",
 		},
 		"specific value": {
-			input: Err,
+			input:    Err,
 			expected: "LOG_MASK(LOG_ERR)",
 		},
 		"upto value": {
-			input: Crit | Alert | Emerg,
+			input:    Crit | Alert | Emerg,
 			expected: "LOG_UPTO(LOG_CRIT)",
 		},
 		"multi value": {
-			input: Err | Alert | Emerg,
+			input:    Err | Alert | Emerg,
 			expected: "LOG_MASK(LOG_EMERG|LOG_ALERT|LOG_ERR)",
 		},
 	}
@@ -154,13 +154,13 @@ func TestMaskGetFromEnv(t *testing.T) {
 	}
 
 	type testCase struct {
-		input map[string]string
+		input    map[string]string
 		expected Mask
 	}
 
 	tests := map[string]testCase{
 		"no vals set": {
-			input: map[string]string{},
+			input:    map[string]string{},
 			expected: Mask(0xFF),
 		},
 		"upto set": {
@@ -194,7 +194,7 @@ func TestMaskGetFromEnv(t *testing.T) {
 			},
 			expected: Mask(0xFF),
 		},
-		"bad simple mask" : {
+		"bad simple mask": {
 			input: map[string]string{
 				"LOG_MASK": "LOG_USER",
 			},

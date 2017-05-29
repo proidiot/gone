@@ -24,19 +24,19 @@ const (
 	Debug   Mask = (1 << pri.Debug)
 )
 
-var lookup = map[Mask]string {
-	Emerg: "LOG_EMERG",
-	Alert: "LOG_ALERT",
-	Crit: "LOG_CRIT",
-	Err: "LOG_ERR",
+var lookup = map[Mask]string{
+	Emerg:   "LOG_EMERG",
+	Alert:   "LOG_ALERT",
+	Crit:    "LOG_CRIT",
+	Err:     "LOG_ERR",
 	Warning: "LOG_WARNING",
-	Notice: "LOG_NOTICE",
-	Info: "LOG_INFO",
-	Debug: "LOG_DEBUG",
+	Notice:  "LOG_NOTICE",
+	Info:    "LOG_INFO",
+	Debug:   "LOG_DEBUG",
 }
 
 func UpTo(p pri.Priority) Mask {
-	return Mask((1 << (p.Severity() +1)) - 1)
+	return Mask((1 << (p.Severity() + 1)) - 1)
 }
 
 func (m Mask) Masked(p pri.Priority) bool {
@@ -48,7 +48,7 @@ func (m Mask) String() string {
 		return "LOG_UPTO(LOG_DEBUG)"
 	} else if m == 0x00 {
 		return "LOG_MASK(0x0)"
-	} else if _, present := lookup[m + 1]; present {
+	} else if _, present := lookup[m+1]; present {
 		return fmt.Sprintf(
 			"LOG_UPTO(%s)",
 			lookup[(m+1)>>1],
@@ -81,7 +81,8 @@ func GetFromEnv() Mask {
 	} else if vals, set := os.LookupEnv("LOG_MASK"); set {
 		m := Mask(0)
 
-		maskLoop: for _, val := range strings.Split(vals, "|") {
+	maskLoop:
+		for _, val := range strings.Split(vals, "|") {
 			for mask, mstring := range lookup {
 				if val == mstring {
 					m |= mask
