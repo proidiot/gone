@@ -41,7 +41,7 @@ func Closelog() error {
 }
 
 func Emerg(m interface{}) error {
-	return Syslog(pri.Priority{0x00,pri.Emerg}, m)
+	return Syslog(pri.Priority{0x00, pri.Emerg}, m)
 }
 
 func Emergency(m interface{}) error {
@@ -49,11 +49,11 @@ func Emergency(m interface{}) error {
 }
 
 func Alert(m interface{}) error {
-	return Syslog(pri.Priority{0x00,pri.Alert}, m)
+	return Syslog(pri.Priority{0x00, pri.Alert}, m)
 }
 
 func Crit(m interface{}) error {
-	return Syslog(pri.Priority{0x00,pri.Crit}, m)
+	return Syslog(pri.Priority{0x00, pri.Crit}, m)
 }
 
 func Critical(m interface{}) error {
@@ -61,7 +61,7 @@ func Critical(m interface{}) error {
 }
 
 func Err(m interface{}) error {
-	return Syslog(pri.Priority{0x00,pri.Err}, m)
+	return Syslog(pri.Priority{0x00, pri.Err}, m)
 }
 
 func Error(m interface{}) error {
@@ -69,7 +69,7 @@ func Error(m interface{}) error {
 }
 
 func Warning(m interface{}) error {
-	return Syslog(pri.Priority{0x00,pri.Warning}, m)
+	return Syslog(pri.Priority{0x00, pri.Warning}, m)
 }
 
 func Warn(m interface{}) error {
@@ -77,11 +77,11 @@ func Warn(m interface{}) error {
 }
 
 func Notice(m interface{}) error {
-	return Syslog(pri.Priority{0x00,pri.Notice}, m)
+	return Syslog(pri.Priority{0x00, pri.Notice}, m)
 }
 
 func Info(m interface{}) error {
-	return Syslog(pri.Priority{0x00,pri.Info}, m)
+	return Syslog(pri.Priority{0x00, pri.Info}, m)
 }
 
 func Information(m interface{}) error {
@@ -89,5 +89,5 @@ func Information(m interface{}) error {
 }
 
 func Debug(m interface{}) error {
-	return Syslog(pri.Priority{0x00,pri.Debug}, m)
+	return Syslog(pri.Priority{0x00, pri.Debug}, m)
 }
