@@ -128,16 +128,6 @@ func TestOptGetFromEnv(t *testing.T) {
 }
 
 func TestOptString(t *testing.T) {
-	envOpts := []string{
-		"LOG_PID",
-		"LOG_CONS",
-		"LOG_ODELAY",
-		"LOG_NDELAY",
-		"LOG_NOWAIT",
-		"LOG_PERROR",
-		"LOG_NOFALLBACK",
-	}
-
 	type testCase struct {
 		input       Option
 		expected    string
@@ -214,11 +204,6 @@ func TestOptString(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		for _, envOpt := range envOpts {
-			e := os.Unsetenv(envOpt)
-			assert.NoError(t, e, "Error during Unsetenv")
-		}
-
 		actual := test.input.String()
 
 		assert.Equal(
