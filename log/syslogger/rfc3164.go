@@ -10,7 +10,7 @@ import (
 
 type Rfc3164 struct {
 	Syslogger Syslogger
-	Facility  pri.Facility
+	Facility  pri.Priority
 	Ident     string
 	Pid       bool
 }
@@ -25,16 +25,12 @@ func (r *Rfc3164) Syslog(p pri.Priority, msg interface{}) error {
 		)
 	}
 
-	if p.Facility.Valid() != nil || p.Facility == 0x00 {
+	if p.ValidFacility() != nil || p.Facility() == 0x00 {
 		if r.Facility == 0x00 {
-			p.Facility = pri.User
+			p = pri.User | p.Severity()
 		} else {
-			p.Facility = r.Facility
+			p = r.Facility | p.Severity()
 		}
-	}
-	prival, e := p.Combine()
-	if e != nil {
-		return e
 	}
 
 	timestamp := time.Now().Format(time.Stamp)
@@ -59,7 +55,7 @@ func (r *Rfc3164) Syslog(p pri.Priority, msg interface{}) error {
 
 	res := fmt.Sprintf(
 		"<%d>%s %s %s%s: %s",
-		prival,
+		p,
 		timestamp,
 		hostname,
 		tag,
@@ -79,5 +75,5 @@ func (r *Rfc3164) Syslog(p pri.Priority, msg interface{}) error {
 		)
 	}
 
-	return r.Syslogger.Syslog(pri.Priority{}, res)
+	return r.Syslogger.Syslog(pri.Priority(0x0), res)
 }

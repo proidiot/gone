@@ -13,7 +13,7 @@ import (
 type Posixish struct {
 	i string
 	o opt.Option
-	f pri.Facility
+	f pri.Priority
 	l Syslogger
 	c []io.Closer
 	x sync.RWMutex
@@ -29,7 +29,7 @@ func (x *Posixish) Syslog(p pri.Priority, msg interface{}) error {
 
 	if t == nil {
 		x.x.Lock()
-		e := x.Openlog("", opt.Option(0), pri.Facility(0))
+		e := x.Openlog("", opt.Option(0), pri.User)
 		t = x.l
 		x.x.Unlock()
 
@@ -44,7 +44,7 @@ func (x *Posixish) Syslog(p pri.Priority, msg interface{}) error {
 func (p *Posixish) Openlog(
 	ident string,
 	options opt.Option,
-	facility pri.Facility,
+	facility pri.Priority,
 ) error {
 	if (options&opt.NDelay) != 0 && (options&opt.ODelay) != 0 {
 		return errors.New(
@@ -54,7 +54,7 @@ func (p *Posixish) Openlog(
 		)
 	}
 
-	if e := facility.Valid(); e != nil {
+	if e := facility.ValidFacility(); e != nil {
 		return e
 	}
 

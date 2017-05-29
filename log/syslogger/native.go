@@ -9,7 +9,7 @@ import (
 
 type NativeSyslog struct {
 	w *syslog.Writer
-	f pri.Facility
+	f pri.Priority
 }
 
 func (n *NativeSyslog) Syslog(p pri.Priority, msg interface{}) error {
@@ -22,7 +22,7 @@ func (n *NativeSyslog) Syslog(p pri.Priority, msg interface{}) error {
 		)
 	}
 
-	if p.Facility != 0x00 && p.Facility != n.f {
+	if p.Facility() != 0x00 && p.Facility() != n.f {
 		return errors.New(
 			fmt.Sprintf(
 				"The native Go log/syslog system does not"+
@@ -44,7 +44,7 @@ func (n *NativeSyslog) Syslog(p pri.Priority, msg interface{}) error {
 		)
 	}
 
-	switch p.Severity.Masked() {
+	switch p.Severity() {
 	case pri.Emerg:
 		return n.w.Emerg(m)
 	case pri.Alert:
@@ -76,12 +76,12 @@ func (n *NativeSyslog) Close() error {
 	return n.w.Close()
 }
 
-func NewNativeSyslog(f pri.Facility, ident string) (*NativeSyslog, error) {
-	if e := f.Valid(); e != nil {
+func NewNativeSyslog(f pri.Priority, ident string) (*NativeSyslog, error) {
+	if e := f.ValidFacility(); e != nil {
 		return nil, e
 	}
 
-	w, e := syslog.New(syslog.Priority(f.Masked()), ident)
+	w, e := syslog.New(syslog.Priority(f.Facility()), ident)
 	if e != nil {
 		return nil, e
 	}
@@ -95,17 +95,17 @@ func NewNativeSyslog(f pri.Facility, ident string) (*NativeSyslog, error) {
 func DialNativeSyslog(
 	network string,
 	raddr string,
-	f pri.Facility,
+	f pri.Priority,
 	ident string,
 ) (*NativeSyslog, error) {
-	if e := f.Valid(); e != nil {
+	if e := f.ValidFacility(); e != nil {
 		return nil, e
 	}
 
 	w, e := syslog.Dial(
 		network,
 		raddr,
-		syslog.Priority(f.Masked()),
+		syslog.Priority(f.Facility()),
 		ident,
 	)
 	if e != nil {

@@ -11,7 +11,7 @@ type Writer struct {
 }
 
 func (w *Writer) Syslog(p pri.Priority, msg interface{}) error {
-	if p != (pri.Priority{}) {
+	if p != 0x00 {
 		return errors.New(
 			"The basic syslog.Writer cannot differentiate" +
 				" between log priorities so it expects a" +

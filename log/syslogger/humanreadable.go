@@ -10,7 +10,7 @@ import (
 
 type HumanReadable struct {
 	Syslogger Syslogger
-	Facility  pri.Facility
+	Facility  pri.Priority
 	Ident     string
 	Pid       bool
 }
@@ -34,12 +34,11 @@ func (h *HumanReadable) Syslog(p pri.Priority, msg interface{}) error {
 		)
 	}
 
-	facility := p.Facility
-	if facility.Valid() != nil || facility == 0x00 {
+	if p.ValidFacility() != nil || p.Facility() == 0x00 {
 		if h.Facility == 0x00 {
-			facility = pri.User
+			p = pri.User | p.Severity()
 		} else {
-			facility = h.Facility
+			p = h.Facility | p.Severity()
 		}
 	}
 
@@ -65,13 +64,13 @@ func (h *HumanReadable) Syslog(p pri.Priority, msg interface{}) error {
 
 	m := fmt.Sprintf(
 		"%s %s %s %s %s %s",
-		facility,
-		p.Severity.Masked(),
+		p.Facility(),
+		p.Severity(),
 		timestamp,
 		hostname,
 		ident,
 		s,
 	)
 
-	return h.Syslogger.Syslog(pri.Priority{}, m)
+	return h.Syslogger.Syslog(pri.Priority(0x0), m)
 }
