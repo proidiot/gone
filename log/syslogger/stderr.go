@@ -8,8 +8,8 @@ import (
 type Stderr struct {
 }
 
-func (s Stderr) Syslog(p pri.Priority, msg interface{}) error {
-	return Writer{
+func (s *Stderr) Syslog(p pri.Priority, msg interface{}) error {
+	return (&Writer{
 		os.Stderr,
-	}.Syslog(p, msg)
+	}).Syslog(p, msg)
 }

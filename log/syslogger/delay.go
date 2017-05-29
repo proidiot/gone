@@ -12,10 +12,10 @@ type sysloggerHandle struct {
 type Delay struct {
 	h  *sysloggerHandle
 	cb func() (Syslogger, error)
-	x  *sync.Mutex
+	x  sync.Mutex
 }
 
-func (d Delay) Syslog(p pri.Priority, msg interface{}) error {
+func (d *Delay) Syslog(p pri.Priority, msg interface{}) error {
 	d.x.Lock()
 	// Not deferring the unlock here because the actual Syslog call at the
 	// end may take some time.
@@ -32,8 +32,8 @@ func (d Delay) Syslog(p pri.Priority, msg interface{}) error {
 	return h.s.Syslog(p, msg)
 }
 
-func NewDelay(cb func() (Syslogger, error)) Delay {
-	return Delay{
+func NewDelay(cb func() (Syslogger, error)) *Delay {
+	return &Delay{
 		cb: cb,
 	}
 }

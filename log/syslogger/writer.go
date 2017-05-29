@@ -10,7 +10,7 @@ type Writer struct {
 	Writer io.Writer
 }
 
-func (w Writer) Syslog(p pri.Priority, msg interface{}) error {
+func (w *Writer) Syslog(p pri.Priority, msg interface{}) error {
 	if p != (pri.Priority{}) {
 		return errors.New(
 			"The basic syslog.Writer cannot differentiate" +

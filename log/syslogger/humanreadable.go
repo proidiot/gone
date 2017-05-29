@@ -15,7 +15,7 @@ type HumanReadable struct {
 	Pid       bool
 }
 
-func (h HumanReadable) Syslog(p pri.Priority, msg interface{}) error {
+func (h *HumanReadable) Syslog(p pri.Priority, msg interface{}) error {
 	var s string
 	switch msg := msg.(type) {
 	case string:

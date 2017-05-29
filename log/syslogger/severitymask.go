@@ -10,7 +10,7 @@ type SeverityMask struct {
 	Mask      mask.Mask
 }
 
-func (s SeverityMask) Syslog(p pri.Priority, msg interface{}) error {
+func (s *SeverityMask) Syslog(p pri.Priority, msg interface{}) error {
 	if s.Mask.Masked(p.Severity) {
 		return nil
 	}

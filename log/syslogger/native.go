@@ -12,7 +12,7 @@ type NativeSyslog struct {
 	f pri.Facility
 }
 
-func (n NativeSyslog) Syslog(p pri.Priority, msg interface{}) error {
+func (n *NativeSyslog) Syslog(p pri.Priority, msg interface{}) error {
 	m, goodType := msg.(string)
 	if !goodType {
 		return errors.New(
@@ -72,21 +72,21 @@ func (n NativeSyslog) Syslog(p pri.Priority, msg interface{}) error {
 	}
 }
 
-func (n NativeSyslog) Close() error {
+func (n *NativeSyslog) Close() error {
 	return n.w.Close()
 }
 
-func NewNativeSyslog(f pri.Facility, ident string) (NativeSyslog, error) {
+func NewNativeSyslog(f pri.Facility, ident string) (*NativeSyslog, error) {
 	if e := f.Valid(); e != nil {
-		return NativeSyslog{}, e
+		return nil, e
 	}
 
 	w, e := syslog.New(syslog.Priority(f.Masked()), ident)
 	if e != nil {
-		return NativeSyslog{}, e
+		return nil, e
 	}
 
-	return NativeSyslog{
+	return &NativeSyslog{
 		w,
 		f,
 	}, nil
@@ -97,9 +97,9 @@ func DialNativeSyslog(
 	raddr string,
 	f pri.Facility,
 	ident string,
-) (NativeSyslog, error) {
+) (*NativeSyslog, error) {
 	if e := f.Valid(); e != nil {
-		return NativeSyslog{}, e
+		return nil, e
 	}
 
 	w, e := syslog.Dial(
@@ -109,10 +109,10 @@ func DialNativeSyslog(
 		ident,
 	)
 	if e != nil {
-		return NativeSyslog{}, e
+		return nil, e
 	}
 
-	return NativeSyslog{
+	return &NativeSyslog{
 		w,
 		f,
 	}, nil

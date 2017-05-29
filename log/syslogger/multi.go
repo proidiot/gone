@@ -9,7 +9,7 @@ type Multi struct {
 	TryAll     bool
 }
 
-func (m Multi) Syslog(p pri.Priority, msg interface{}) error {
+func (m *Multi) Syslog(p pri.Priority, msg interface{}) error {
 	var err error
 
 	for _, s := range m.Sysloggers {

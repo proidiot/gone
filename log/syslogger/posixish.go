@@ -16,10 +16,10 @@ type Posixish struct {
 	f pri.Facility
 	l Syslogger
 	c []io.Closer
-	x *sync.RWMutex
+	x sync.RWMutex
 }
 
-func (x Posixish) Syslog(p pri.Priority, msg interface{}) error {
+func (x *Posixish) Syslog(p pri.Priority, msg interface{}) error {
 	x.x.RLock()
 	// The read unlock isn't being deferred here because t.Syslog could
 	// take some time in the best case, but it might even need to acquire a
@@ -41,7 +41,7 @@ func (x Posixish) Syslog(p pri.Priority, msg interface{}) error {
 	return t.Syslog(p, msg)
 }
 
-func (p Posixish) Openlog(
+func (p *Posixish) Openlog(
 	ident string,
 	options opt.Option,
 	facility pri.Facility,
@@ -85,27 +85,27 @@ func (p Posixish) Openlog(
 	}
 }
 
-func (p Posixish) Close() error {
+func (p *Posixish) Close() error {
 	return p.Closelog()
 }
 
-func (p Posixish) Closelog() error {
+func (p *Posixish) Closelog() error {
 	p.x.Lock()
 	defer p.x.Unlock()
 	return p.closelog()
 }
 
-func (p Posixish) SetLogMask(m mask.Mask) error {
+func (p *Posixish) SetLogMask(m mask.Mask) error {
 	p.x.Lock()
 	defer p.x.Unlock()
-	p.l = SeverityMask{
+	p.l = &SeverityMask{
 		Syslogger: p.l,
 		Mask:      m,
 	}
 	return nil
 }
 
-func (p Posixish) openlog() (Syslogger, error) {
+func (p *Posixish) openlog() (Syslogger, error) {
 	if e := p.closelog(); e != nil {
 		return nil, e
 	}
@@ -121,15 +121,15 @@ func (p Posixish) openlog() (Syslogger, error) {
 		if f, e := os.Open("/dev/console"); e == nil {
 			p.c = append(p.c, f)
 
-			c := Rfc3164{
-				Syslogger: Writer{f},
+			c := &Rfc3164{
+				Syslogger: &Writer{f},
 				Facility:  p.f,
 				Ident:     p.i,
 				Pid:       (p.o & opt.Pid) != 0,
 			}
 
 			if l != nil {
-				l = Fallthrough{
+				l = &Fallthrough{
 					Default:     l,
 					Fallthrough: c,
 				}
@@ -154,8 +154,8 @@ func (p Posixish) openlog() (Syslogger, error) {
 			)
 		}
 	} else {
-		es := Rfc3164{
-			Syslogger: Writer{os.Stderr},
+		es := &Rfc3164{
+			Syslogger: &Writer{os.Stderr},
 			Facility:  p.f,
 			Ident:     p.i,
 			Pid:       (p.o & opt.Pid) != 0,
@@ -164,7 +164,7 @@ func (p Posixish) openlog() (Syslogger, error) {
 		if l == nil {
 			l = es
 		} else if (p.o & opt.Perror) != 0 {
-			l = Multi{
+			l = &Multi{
 				Sysloggers: []Syslogger{
 					l,
 					es,
@@ -172,7 +172,7 @@ func (p Posixish) openlog() (Syslogger, error) {
 				TryAll: true,
 			}
 		} else {
-			l = Fallthrough{
+			l = &Fallthrough{
 				Default:     l,
 				Fallthrough: es,
 			}
@@ -180,13 +180,13 @@ func (p Posixish) openlog() (Syslogger, error) {
 	}
 
 	if (p.o & opt.NoWait) != 0 {
-		l = NoWait{l}
+		l = &NoWait{l}
 	}
 
 	return l, nil
 }
 
-func (p Posixish) closelog() error {
+func (p *Posixish) closelog() error {
 	var err error
 
 	for _, c := range p.c {

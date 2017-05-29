@@ -15,7 +15,7 @@ type Rfc3164 struct {
 	Pid       bool
 }
 
-func (r Rfc3164) Syslog(p pri.Priority, msg interface{}) error {
+func (r *Rfc3164) Syslog(p pri.Priority, msg interface{}) error {
 	content, goodType := msg.(string)
 	if !goodType {
 		return errors.New(
