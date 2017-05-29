@@ -1,13 +1,14 @@
-//go:generate stringer -type Mask
 package mask
 
 import (
+	"fmt"
 	"github.com/proidiot/gone/log/pri"
 	"os"
+	"strings"
 )
 
-// Log severity
-// See RFC 3164 Section 4.1.1, RFC 5424 Section 6.2.1, and RFC 5427 Section 3.
+// Log severity mask
+// See POSIX.1-2008. Also see POSIX.1-2001, RFC 3164, and RFC 5424.
 type Mask byte
 
 // Masks which only allow messages matching the corresponding severity level to
@@ -23,68 +24,78 @@ const (
 	Debug   Mask = (1 << pri.Debug)
 )
 
-func UpTo(s pri.Severity) Mask {
-	if s >= pri.Debug {
-		return Mask(0xFF)
-	} else {
-		return Mask((1 << s) - 1)
-	}
+var lookup = map[Mask]string {
+	Emerg: "LOG_EMERG",
+	Alert: "LOG_ALERT",
+	Crit: "LOG_CRIT",
+	Err: "LOG_ERR",
+	Warning: "LOG_WARNING",
+	Notice: "LOG_NOTICE",
+	Info: "LOG_INFO",
+	Debug: "LOG_DEBUG",
 }
 
-func (m Mask) Masked(s pri.Severity) bool {
-	if s > pri.Debug {
-		return true
+func UpTo(p pri.Priority) Mask {
+	return Mask((1 << (p.Severity() +1)) - 1)
+}
+
+func (m Mask) Masked(p pri.Priority) bool {
+	return (m & (1 << p.Severity())) != 0
+}
+
+func (m Mask) String() string {
+	if m == 0xFF {
+		return "LOG_UPTO(LOG_DEBUG)"
+	} else if m == 0x00 {
+		return "LOG_MASK(0x0)"
+	} else if _, present := lookup[m + 1]; present {
+		return fmt.Sprintf(
+			"LOG_UPTO(%s)",
+			lookup[(m+1)>>1],
+		)
 	} else {
-		return (m & (1 << s)) != 0
+		masked := []string{}
+		for t := byte(1); t <= 0xFF && t != 0 && t <= byte(m); t *= 2 {
+			if (t & byte(m)) != 0 {
+				masked = append(masked, lookup[Mask(t)])
+			}
+		}
+		return fmt.Sprintf("LOG_MASK(%s)", strings.Join(masked, "|"))
 	}
 }
 
 func GetFromEnv() Mask {
-	value := ""
-	var m Mask
-	upTo := false
-
-	for _, env := range os.Environ() {
-		// TODO read mask levels from env, union LOG_MASK
-		switch env {
-		case "LOG_UPTO":
-			value = os.Getenv(env)
-			upTo = true
-		case "LOG_MASK":
-			if value == "" {
-				value = os.Getenv(env)
+	if val, set := os.LookupEnv("LOG_UPTO"); set {
+		for mask, mstring := range lookup {
+			if val == mstring {
+				if mask == Debug {
+					return Mask(0xFF)
+				} else {
+					return (mask << 1) - 1
+				}
 			}
 		}
-	}
 
-	switch value {
-	case "LOG_EMERG":
-		m = Emerg
-	case "LOG_ALERT":
-		m = Alert
-	case "LOG_CRIT":
-		m = Crit
-	case "LOG_ERR":
-		m = Err
-	case "LOG_WARNING":
-		m = Warning
-	case "LOG_NOTICE":
-		m = Notice
-	case "LOG_INFO":
-		m = Info
-	case "LOG_DEBUG":
-		m = Debug
-	default:
-		m = Mask(0xFF)
-	}
+		// An invalid mask value was given, abort to default.
+		return Mask(0xFF)
+	} else if vals, set := os.LookupEnv("LOG_MASK"); set {
+		m := Mask(0)
 
-	if upTo {
-		if m >= Debug {
+		maskLoop: for _, val := range strings.Split(vals, "|") {
+			for mask, mstring := range lookup {
+				if val == mstring {
+					m |= mask
+					continue maskLoop
+				}
+			}
+
+			// An invalid mask value was given, abort to default.
 			return Mask(0xFF)
-		} else {
-			return (m << 1) - 1
 		}
-	} else {
+
 		return m
+	} else {
+		// No mask value given, use default.
+		return Mask(0xFF)
 	}
 }
