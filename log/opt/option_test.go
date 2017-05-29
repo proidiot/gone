@@ -18,76 +18,76 @@ func TestOptGetFromEnv(t *testing.T) {
 		"LOG_NOFALLBACK",
 	}
 
-	type testCase struct{
-		env []string
-		expected Option
+	type testCase struct {
+		env         []string
+		expected    Option
 		explanation string
 	}
 
 	tests := []testCase{
-		testCase{
-			env: []string{},
-			expected: 0x00,
+		{
+			env:         []string{},
+			expected:    0x00,
 			explanation: "no options set",
 		},
-		testCase{
+		{
 			env: []string{
 				"LOG_PID",
 			},
-			expected: Pid,
+			expected:    Pid,
 			explanation: "pid only",
 		},
-		testCase{
+		{
 			env: []string{
 				"LOG_CONS",
 			},
-			expected: Cons,
+			expected:    Cons,
 			explanation: "cons only",
 		},
-		testCase{
+		{
 			env: []string{
 				"LOG_ODELAY",
 			},
-			expected: ODelay,
+			expected:    ODelay,
 			explanation: "odelay only",
 		},
-		testCase{
+		{
 			env: []string{
 				"LOG_NDELAY",
 			},
-			expected: NDelay,
+			expected:    NDelay,
 			explanation: "ndelay only",
 		},
-		testCase{
+		{
 			env: []string{
 				"LOG_NOWAIT",
 			},
-			expected: NoWait,
+			expected:    NoWait,
 			explanation: "nowait only",
 		},
-		testCase{
+		{
 			env: []string{
 				"LOG_PERROR",
 			},
-			expected: Perror,
+			expected:    Perror,
 			explanation: "perror only",
 		},
-		testCase{
+		{
 			env: []string{
 				"LOG_NOFALLBACK",
 			},
-			expected: NoFallback,
+			expected:    NoFallback,
 			explanation: "nofallback only",
 		},
-		testCase{
+		{
 			env: []string{
 				"LOG_PID",
 				"LOG_CONS",
 			},
-			expected: Pid|Cons,
+			expected:    Pid | Cons,
 			explanation: "pid and cons",
 		},
-		testCase{
+		{
 			env: []string{
 				"LOG_PID",
 				"LOG_CONS",
@@ -97,7 +97,7 @@ func TestOptGetFromEnv(t *testing.T) {
 				"LOG_PERROR",
 				"LOG_NOFALLBACK",
 			},
-			expected: 0x7F,
+			expected:    0x7F,
 			explanation: "all opts",
 		},
 	}
@@ -138,77 +138,77 @@ func TestOptString(t *testing.T) {
 		"LOG_NOFALLBACK",
 	}
 
-	type testCase struct{
-		input Option
-		expected string
+	type testCase struct {
+		input       Option
+		expected    string
 		explanation string
 	}
 
 	tests := []testCase{
-		testCase{
-			input: 0x00,
-			expected: "Option(0)",
+		{
+			input:       0x00,
+			expected:    "Option(0)",
 			explanation: "no options set",
 		},
-		testCase{
-			input: Pid,
-			expected: "LOG_PID",
+		{
+			input:       Pid,
+			expected:    "LOG_PID",
 			explanation: "pid only",
 		},
-		testCase{
-			input: Cons,
-			expected: "LOG_CONS",
+		{
+			input:       Cons,
+			expected:    "LOG_CONS",
 			explanation: "cons only",
 		},
-		testCase{
-			input: ODelay,
-			expected: "LOG_ODELAY",
+		{
+			input:       ODelay,
+			expected:    "LOG_ODELAY",
 			explanation: "odelay only",
 		},
-		testCase{
-			input: NDelay,
-			expected: "LOG_NDELAY",
+		{
+			input:       NDelay,
+			expected:    "LOG_NDELAY",
 			explanation: "ndelay only",
 		},
-		testCase{
-			input: NoWait,
-			expected: "LOG_NOWAIT",
+		{
+			input:       NoWait,
+			expected:    "LOG_NOWAIT",
 			explanation: "nowait only",
 		},
-		testCase{
-			input: Perror,
-			expected: "LOG_PERROR",
+		{
+			input:       Perror,
+			expected:    "LOG_PERROR",
 			explanation: "perror only",
 		},
-		testCase{
-			input: NoFallback,
-			expected: "LOG_NOFALLBACK",
+		{
+			input:       NoFallback,
+			expected:    "LOG_NOFALLBACK",
 			explanation: "nofallback only",
 		},
-		testCase{
-			input: Pid|Cons,
-			expected: "LOG_PID|LOG_CONS",
+		{
+			input:       Pid | Cons,
+			expected:    "LOG_PID|LOG_CONS",
 			explanation: "pid and cons",
 		},
-		testCase{
-			input: Perror|NDelay|NoWait,
-			expected: "LOG_NDELAY|LOG_NOWAIT|LOG_PERROR",
+		{
+			input:       Perror | NDelay | NoWait,
+			expected:    "LOG_NDELAY|LOG_NOWAIT|LOG_PERROR",
 			explanation: "ndelay, nowait, and perror",
 		},
-		testCase{
+		{
 			input: 0x7F,
 			expected: "LOG_PID|LOG_CONS|LOG_ODELAY|LOG_NDELAY" +
 				"|LOG_NOWAIT|LOG_PERROR|LOG_NOFALLBACK",
 			explanation: "all opts",
 		},
-		testCase{
-			input: 0x80,
-			expected: "Option(80)",
+		{
+			input:       0x80,
+			expected:    "Option(80)",
 			explanation: "unknown opt",
 		},
-		testCase{
-			input: 0x84,
-			expected: "LOG_ODELAY|Option(80)",
+		{
+			input:       0x84,
+			expected:    "LOG_ODELAY|Option(80)",
 			explanation: "odelay and unknown opt",
 		},
 	}

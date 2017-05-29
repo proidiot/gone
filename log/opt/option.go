@@ -1,7 +1,7 @@
-//go:generate stringer -type Option
 package opt
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -59,24 +59,77 @@ const (
 func GetFromEnv() Option {
 	var o Option
 
-	for _, env := range os.Environ() {
-		switch env {
-		case "LOG_PID":
-			o |= Pid
-		case "LOG_CONS":
-			o |= Cons
-		case "LOG_ODELAY":
-			o |= ODelay
-		case "LOG_NDELAY":
-			o |= NDelay
-		case "LOG_NOWAIT":
-			o |= NoWait
-		case "LOG_PERROR":
-			o |= Perror
-		case "LOG_NOFALLBACK":
-			o |= NoFallback
-		}
+	if _, set := os.LookupEnv("LOG_PID"); set {
+		o |= Pid
+	}
+
+	if _, set := os.LookupEnv("LOG_CONS"); set {
+		o |= Cons
+	}
+
+	if _, set := os.LookupEnv("LOG_ODELAY"); set {
+		o |= ODelay
+	}
+
+	if _, set := os.LookupEnv("LOG_NDELAY"); set {
+		o |= NDelay
+	}
+
+	if _, set := os.LookupEnv("LOG_NOWAIT"); set {
+		o |= NoWait
+	}
+
+	if _, set := os.LookupEnv("LOG_PERROR"); set {
+		o |= Perror
+	}
+
+	if _, set := os.LookupEnv("LOG_NOFALLBACK"); set {
+		o |= NoFallback
 	}
 
 	return o
+}
+
+func (o Option) String() string {
+	if o == 0 {
+		return "Option(0)"
+	}
+
+	res := ""
+	for o2 := o; o2 != 0; {
+		if o2 != o {
+			res += "|"
+		}
+
+		if (o2 & Pid) != 0 {
+			res += "LOG_PID"
+			o2 &= (0xFF - Pid)
+		} else if (o2 & Cons) != 0 {
+			res += "LOG_CONS"
+			o2 &= (0xFF - Cons)
+		} else if (o2 & ODelay) != 0 {
+			res += "LOG_ODELAY"
+			o2 &= (0xFF - ODelay)
+		} else if (o2 & NDelay) != 0 {
+			res += "LOG_NDELAY"
+			o2 &= (0xFF - NDelay)
+		} else if (o2 & NoWait) != 0 {
+			res += "LOG_NOWAIT"
+			o2 &= (0xFF - NoWait)
+		} else if (o2 & Perror) != 0 {
+			res += "LOG_PERROR"
+			o2 &= (0xFF - Perror)
+		} else if (o2 & NoFallback) != 0 {
+			res += "LOG_NOFALLBACK"
+			o2 &= (0xFF - NoFallback)
+		} else {
+			res += fmt.Sprintf(
+				"Option(%x)",
+				byte(o2),
+			)
+			return res
+		}
+	}
+
+	return res
 }
