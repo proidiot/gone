@@ -81,7 +81,7 @@ func GetFromEnv() Option {
 
 func (o Option) String() string {
 	if o == 0 {
-		return fmt.Sprintf("Option(%x)", 0)
+		return fmt.Sprintf("Option(%#x)", 0)
 	}
 
 	oset := []string{}
@@ -93,7 +93,7 @@ func (o Option) String() string {
 				oset = append(
 					oset,
 					fmt.Sprintf(
-						"Option(%x)",
+						"Option(%#x)",
 						t,
 					),
 				)

@@ -137,7 +137,7 @@ func TestOptString(t *testing.T) {
 	tests := []testCase{
 		{
 			input:       0x00,
-			expected:    "Option(0)",
+			expected:    "Option(0x0)",
 			explanation: "no options set",
 		},
 		{
@@ -193,12 +193,12 @@ func TestOptString(t *testing.T) {
 		},
 		{
 			input:       0x80,
-			expected:    "Option(80)",
+			expected:    "Option(0x80)",
 			explanation: "unknown opt",
 		},
 		{
 			input:       0x84,
-			expected:    "LOG_ODELAY|Option(80)",
+			expected:    "LOG_ODELAY|Option(0x80)",
 			explanation: "odelay and unknown opt",
 		},
 	}
