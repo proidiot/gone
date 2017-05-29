@@ -3,6 +3,7 @@ package opt
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 type Option byte
@@ -56,35 +57,23 @@ const (
 	NoFallback Option = 0x40
 )
 
+var lookup = map[Option]string{
+	Pid:        "LOG_PID",
+	Cons:       "LOG_CONS",
+	ODelay:     "LOG_ODELAY",
+	NDelay:     "LOG_NDELAY",
+	NoWait:     "LOG_NOWAIT",
+	Perror:     "LOG_PERROR",
+	NoFallback: "LOG_NOFALLBACK",
+}
+
 func GetFromEnv() Option {
 	var o Option
 
-	if _, set := os.LookupEnv("LOG_PID"); set {
-		o |= Pid
-	}
-
-	if _, set := os.LookupEnv("LOG_CONS"); set {
-		o |= Cons
-	}
-
-	if _, set := os.LookupEnv("LOG_ODELAY"); set {
-		o |= ODelay
-	}
-
-	if _, set := os.LookupEnv("LOG_NDELAY"); set {
-		o |= NDelay
-	}
-
-	if _, set := os.LookupEnv("LOG_NOWAIT"); set {
-		o |= NoWait
-	}
-
-	if _, set := os.LookupEnv("LOG_PERROR"); set {
-		o |= Perror
-	}
-
-	if _, set := os.LookupEnv("LOG_NOFALLBACK"); set {
-		o |= NoFallback
+	for oflag, ostring := range lookup {
+		if _, set := os.LookupEnv(ostring); set {
+			o |= oflag
+		}
 	}
 
 	return o
@@ -92,44 +81,25 @@ func GetFromEnv() Option {
 
 func (o Option) String() string {
 	if o == 0 {
-		return "Option(0)"
+		return fmt.Sprintf("Option(%x)", 0)
 	}
 
-	res := ""
-	for o2 := o; o2 != 0; {
-		if o2 != o {
-			res += "|"
-		}
-
-		if (o2 & Pid) != 0 {
-			res += "LOG_PID"
-			o2 &= (0xFF - Pid)
-		} else if (o2 & Cons) != 0 {
-			res += "LOG_CONS"
-			o2 &= (0xFF - Cons)
-		} else if (o2 & ODelay) != 0 {
-			res += "LOG_ODELAY"
-			o2 &= (0xFF - ODelay)
-		} else if (o2 & NDelay) != 0 {
-			res += "LOG_NDELAY"
-			o2 &= (0xFF - NDelay)
-		} else if (o2 & NoWait) != 0 {
-			res += "LOG_NOWAIT"
-			o2 &= (0xFF - NoWait)
-		} else if (o2 & Perror) != 0 {
-			res += "LOG_PERROR"
-			o2 &= (0xFF - Perror)
-		} else if (o2 & NoFallback) != 0 {
-			res += "LOG_NOFALLBACK"
-			o2 &= (0xFF - NoFallback)
-		} else {
-			res += fmt.Sprintf(
-				"Option(%x)",
-				byte(o2),
-			)
-			return res
+	oset := []string{}
+	for t := byte(1); t <= 0x80 && t != 0x00 && t <= byte(o); t *= 2 {
+		if (byte(o) & t) != 0 {
+			if v, present := lookup[Option(t)]; present {
+				oset = append(oset, v)
+			} else {
+				oset = append(
+					oset,
+					fmt.Sprintf(
+						"Option(%x)",
+						t,
+					),
+				)
+			}
 		}
 	}
 
-	return res
+	return strings.Join(oset, "|")
 }
