@@ -183,7 +183,7 @@ func TestOptString(t *testing.T) {
 		{
 			input:       Perror | NDelay | NoWait,
 			expected:    "LOG_NDELAY|LOG_NOWAIT|LOG_PERROR",
-			explanation: "ndelay, nowait, and perror",
+			explanation: "perror, ndelay, and nowait orderring",
 		},
 		{
 			input: 0x7F,
