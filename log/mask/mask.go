@@ -40,7 +40,7 @@ func UpTo(p pri.Priority) Mask {
 }
 
 func (m Mask) Masked(p pri.Priority) bool {
-	return (m & (1 << p.Severity())) != 0
+	return (m & (1 << p.Severity())) == 0
 }
 
 func (m Mask) String() string {

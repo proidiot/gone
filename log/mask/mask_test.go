@@ -58,33 +58,33 @@ func TestMaskMasked(t *testing.T) {
 	tests := map[string]testCase{
 		"zero mask hides everything": {
 			inputMask: Mask(0x0),
-			inputPri:  pri.Emerg,
-			expected:  false,
+			inputPri:  pri.Priority(0x0),
+			expected:  true,
 		},
 		"full mask hides nothing": {
 			inputMask: Mask(0xFF),
-			inputPri:  pri.Debug,
-			expected:  true,
+			inputPri:  pri.Priority(0xFF),
+			expected:  false,
 		},
 		"specific mask allows specific level": {
 			inputMask: Warning,
 			inputPri:  pri.Warning,
-			expected:  true,
+			expected:  false,
 		},
 		"mask doesn't imply lower masks": {
 			inputMask: Crit,
 			inputPri:  pri.Alert,
-			expected:  false,
+			expected:  true,
 		},
 		"bitwise or of mask doesn't imply bitwise or of priority": {
 			inputMask: Alert | Crit,
 			inputPri:  pri.Err,
-			expected:  false,
+			expected:  true,
 		},
 		"compound mask allows constituents": {
 			inputMask: Err | Warning | Notice,
 			inputPri:  pri.Warning,
-			expected:  true,
+			expected:  false,
 		},
 	}
 
