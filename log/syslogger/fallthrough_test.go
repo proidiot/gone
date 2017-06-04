@@ -103,9 +103,10 @@ func TestFallthroughSyslog(t *testing.T) {
 		if fs, ok := test.inputDefault.(*flagSyslog); ok {
 			actualCall := fs.flag
 
-			assert.True(
+			assert.Equal(
 				t,
 				actualCall,
+				test.expectedDefaultCall,
 				fmt.Sprintf(
 					"Fallthrough test call check failure"+
 						" on default syslogger for: %s",
