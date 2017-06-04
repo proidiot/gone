@@ -14,6 +14,23 @@ func (f *flagSyslog) Syslog(p pri.Priority, msg interface{}) error {
 	return nil
 }
 
+type syncFlagSyslog struct {
+	flag bool
+	sync chan interface{}
+}
+
+func (s *syncFlagSyslog) Syslog(p pri.Priority, msg interface{}) error {
+	<-s.sync
+	s.flag = true
+	return nil
+}
+
+func newSyncFlagSyslog() *syncFlagSyslog {
+	return &syncFlagSyslog{
+		sync: make(chan interface{}),
+	}
+}
+
 type errorSyslogError struct {
 	e errors.New
 	s *errorSyslog
