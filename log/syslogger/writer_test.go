@@ -3,18 +3,10 @@ package syslogger
 import (
 	"bytes"
 	"fmt"
-	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
-
-type errorWriter struct {
-}
-
-func (e errorWriter) Write([]byte) (int, error) {
-	return 0, errors.New("Writing to an errorWriter")
-}
 
 func TestWriterSyslog(t *testing.T) {
 	type testCase struct {

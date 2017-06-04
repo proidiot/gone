@@ -2,28 +2,11 @@ package syslogger
 
 import (
 	"fmt"
-	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/mask"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
-
-type flagSyslog struct {
-	flag bool
-}
-
-func (f *flagSyslog) Syslog(p pri.Priority, msg interface{}) error {
-	f.flag = true
-	return nil
-}
-
-type errorSyslog struct {
-}
-
-func (e errorSyslog) Syslog(p pri.Priority, msg interface{}) error {
-	return errors.New("Syslog called on an errorSyslog")
-}
 
 func TestSeverityMaskSyslog(t *testing.T) {
 	type testCase struct {
