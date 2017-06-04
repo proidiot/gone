@@ -105,8 +105,8 @@ func TestFallthroughSyslog(t *testing.T) {
 
 			assert.Equal(
 				t,
-				actualCall,
 				test.expectedDefaultCall,
+				actualCall,
 				fmt.Sprintf(
 					"Fallthrough test call check failure"+
 						" on default syslogger for: %s",
@@ -120,8 +120,8 @@ func TestFallthroughSyslog(t *testing.T) {
 
 			assert.Equal(
 				t,
-				actualCall,
 				test.expectedFallthroughCall,
+				actualCall,
 				fmt.Sprintf(
 					"Fallthrough test call check failure"+
 						" on fallthrough syslogger"+

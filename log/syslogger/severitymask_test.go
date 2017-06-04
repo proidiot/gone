@@ -94,8 +94,8 @@ func TestSeverityMaskSyslog(t *testing.T) {
 
 			assert.Equal(
 				t,
-				actualCall,
 				test.expectedCall,
+				actualCall,
 				fmt.Sprintf(
 					"SeverityMask test call check"+
 						" failure for: %s",

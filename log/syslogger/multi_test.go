@@ -155,10 +155,11 @@ func TestMultiSyslog(t *testing.T) {
 
 			if test.expectedErrorSourceIndex != 0 {
 				i := test.expectedErrorSourceIndex
+				expectedType := &errorSyslogError{}
 
 				assert.IsType(
 					t,
-					&errorSyslogError{},
+					expectedType,
 					actualError,
 					fmt.Sprintf(
 						"Multi test expected error"+
@@ -171,10 +172,13 @@ func TestMultiSyslog(t *testing.T) {
 
 				ese, ok := actualError.(*errorSyslogError)
 				if ok {
+					expectedSrc := test.inputSysloggers[i]
+					actualSrc := ese.s
+
 					assert.Equal(
 						t,
-						test.inputSysloggers[i],
-						ese.s,
+						expectedSrc,
+						actualSrc,
 						fmt.Sprintf(
 							"Multi test expected"+
 								" error to"+
@@ -204,8 +208,8 @@ func TestMultiSyslog(t *testing.T) {
 
 				assert.Equal(
 					t,
-					actualCall,
 					test.expectedCall[idx],
+					actualCall,
 					fmt.Sprintf(
 						"Multi test call check failure"+
 							" on default syslogger"+
