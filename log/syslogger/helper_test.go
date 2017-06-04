@@ -14,11 +14,23 @@ func (f *flagSyslog) Syslog(p pri.Priority, msg interface{}) error {
 	return nil
 }
 
+type errorSyslogError struct {
+	e errors.New
+	s *errorSyslog
+}
+
+func (e *errorSyslogError) Error() string {
+	return e.e.Error()
+}
+
 type errorSyslog struct {
 }
 
-func (e errorSyslog) Syslog(p pri.Priority, msg interface{}) error {
-	return errors.New("Syslog called on an errorSyslog")
+func (es *errorSyslog) Syslog(p pri.Priority, msg interface{}) error {
+	return &errorSyslogError{
+		e: "Syslog called on an errorSyslog",
+		s: es,
+	}
 }
 
 type errorWriter struct {

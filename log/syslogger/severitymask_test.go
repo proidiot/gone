@@ -55,7 +55,7 @@ func TestSeverityMaskSyslog(t *testing.T) {
 		var s2 Syslogger
 
 		if test.inputBadSyslog {
-			s2 = es
+			s2 = &es
 		} else {
 			s2 = &fs
 		}

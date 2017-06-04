@@ -23,7 +23,7 @@ func TestFallthroughSyslog(t *testing.T) {
 			expectedError:    true,
 		},
 		"error default, nil fallthrough": {
-			inputDefault:     errorSyslog{},
+			inputDefault:     &errorSyslog{},
 			inputFallthrough: nil,
 			expectedError:    true,
 		},
@@ -35,17 +35,17 @@ func TestFallthroughSyslog(t *testing.T) {
 		},
 		"nil default, error fallthrough": {
 			inputDefault:     nil,
-			inputFallthrough: errorSyslog{},
+			inputFallthrough: &errorSyslog{},
 			expectedError:    true,
 		},
 		"error default, error fallthrough": {
-			inputDefault:     errorSyslog{},
-			inputFallthrough: errorSyslog{},
+			inputDefault:     &errorSyslog{},
+			inputFallthrough: &errorSyslog{},
 			expectedError:    true,
 		},
 		"working default, error fallthrough": {
 			inputDefault:        &flagSyslog{},
-			inputFallthrough:    errorSyslog{},
+			inputFallthrough:    &errorSyslog{},
 			expectedError:       false,
 			expectedDefaultCall: true,
 		},
@@ -56,7 +56,7 @@ func TestFallthroughSyslog(t *testing.T) {
 			expectedFallthroughCall: true,
 		},
 		"error default, working fallthrough": {
-			inputDefault:            errorSyslog{},
+			inputDefault:            &errorSyslog{},
 			inputFallthrough:        &flagSyslog{},
 			expectedError:           false,
 			expectedFallthroughCall: true,
