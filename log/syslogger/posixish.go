@@ -73,7 +73,7 @@ func (p *Posixish) Openlog(
 			return nil
 		}
 	} else {
-		p.l = NewDelay(
+		l, e := NewDelay(
 			func() (Syslogger, error) {
 				p.x.Lock()
 				defer p.x.Unlock()
@@ -81,7 +81,13 @@ func (p *Posixish) Openlog(
 			},
 		)
 
-		return nil
+		if e != nil {
+			return e
+		} else {
+			p.l = l
+
+			return nil
+		}
 	}
 }
 

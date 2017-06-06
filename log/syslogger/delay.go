@@ -1,6 +1,7 @@
 package syslogger
 
 import (
+	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/pri"
 	"sync"
 )
@@ -32,8 +33,16 @@ func (d *Delay) Syslog(p pri.Priority, msg interface{}) error {
 	return h.s.Syslog(p, msg)
 }
 
-func NewDelay(cb func() (Syslogger, error)) *Delay {
-	return &Delay{
-		cb: cb,
+func NewDelay(cb func() (Syslogger, error)) (*Delay, error) {
+	if cb == nil {
+		return nil, errors.New(
+			"A syslogger.Delay must have a valid callback for" +
+				" generating a Syslogger, but a nil callback" +
+				" was given to syslogger.NewDelay(...).",
+		)
+	} else {
+		return &Delay{
+			cb: cb,
+		}, nil
 	}
 }
