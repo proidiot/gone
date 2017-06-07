@@ -35,7 +35,7 @@ func (r *Rfc3164) Syslog(p pri.Priority, msg interface{}) error {
 
 	timestamp := time.Now().Format(time.Stamp)
 
-	hostname, e := os.Hostname()
+	hostname, e := osHostname()
 	if e != nil {
 		hostname = "localhost"
 	}
