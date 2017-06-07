@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+var osHostname = os.Hostname
+
 type HumanReadable struct {
 	Syslogger Syslogger
 	Facility  pri.Priority
@@ -44,7 +46,7 @@ func (h *HumanReadable) Syslog(p pri.Priority, msg interface{}) error {
 
 	timestamp := time.Now().Format(time.UnixDate)
 
-	hostname, e := os.Hostname()
+	hostname, e := osHostname()
 	if e != nil {
 		hostname = "localhost"
 	}
