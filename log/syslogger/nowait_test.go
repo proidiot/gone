@@ -8,7 +8,8 @@ import (
 )
 
 func TestNoWaitSyslog(t *testing.T) {
-	sfs := newSyncFlagSyslog()
+	sfs, sc := newSyncFlagSyslog()
+	defer close(sc)
 
 	type testCase struct {
 		inputSyslogger Syslogger
@@ -60,7 +61,7 @@ func TestNoWaitSyslog(t *testing.T) {
 		}
 
 		if test.inputSyslogger == sfs {
-			sfs.sync <- nil
+			sc <- nil
 			actualCall := sfs.flag
 
 			assert.Equal(

@@ -16,7 +16,7 @@ func (f *flagSyslog) Syslog(p pri.Priority, msg interface{}) error {
 
 type syncFlagSyslog struct {
 	flag bool
-	sync chan interface{}
+	sync <-chan interface{}
 }
 
 func (s *syncFlagSyslog) Syslog(p pri.Priority, msg interface{}) error {
@@ -25,10 +25,29 @@ func (s *syncFlagSyslog) Syslog(p pri.Priority, msg interface{}) error {
 	return nil
 }
 
-func newSyncFlagSyslog() *syncFlagSyslog {
+func newSyncFlagSyslog() (*syncFlagSyslog, chan<- interface{}) {
+	sc := make(chan interface{})
 	return &syncFlagSyslog{
-		sync: make(chan interface{}),
-	}
+		sync: sc,
+	}, sc
+}
+
+type syncCountSyslog struct {
+	count uint
+	sync  <-chan interface{}
+}
+
+func (s *syncCountSyslog) Syslog(p pri.Priority, msg interface{}) error {
+	<-s.sync
+	s.count++
+	return nil
+}
+
+func newSyncCountSyslog() (*syncCountSyslog, chan<- interface{}) {
+	sc := make(chan interface{})
+	return &syncCountSyslog{
+		sync: sc,
+	}, sc
 }
 
 type errorSyslogError struct {
