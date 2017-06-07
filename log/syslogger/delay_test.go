@@ -149,3 +149,77 @@ func TestDelayNewDelay(t *testing.T) {
 		}
 	}
 }
+
+func TestDelayThreadSafety(t *testing.T) {
+	s, sc := newSyncCountSyslog()
+	defer close(sc)
+
+	d, e := NewDelay(
+		func() (Syslogger, error) {
+			return s, nil
+		},
+	)
+	assert.NoError(
+		t,
+		e,
+		"Delay thread safety test does not expect an error during"+
+			" syslogger.Delay creation",
+	)
+
+	ec := make(chan error)
+	defer close(ec)
+
+	testFunc := func(msg string) {
+		ec <- d.Syslog(pri.Priority(0x0), msg)
+	}
+
+	go testFunc("1")
+	go testFunc("2")
+
+	expectedInitialCount := uint(0)
+	actualInitialCount := s.count
+	assert.Equal(
+		t,
+		expectedInitialCount,
+		actualInitialCount,
+		"Delay thread safety test expects a different initial count",
+	)
+
+	sc <- nil
+
+	e = <-ec
+	assert.NoError(
+		t,
+		e,
+		"Delay thread safety test does not expect an error during"+
+			" the first syslog call",
+	)
+
+	expectedMiddleCount := uint(1)
+	actualMiddleCount := s.count
+	assert.Equal(
+		t,
+		expectedMiddleCount,
+		actualMiddleCount,
+		"Delay thread safety test expects a different middle count",
+	)
+
+	sc <- nil
+
+	e = <-ec
+	assert.NoError(
+		t,
+		e,
+		"Delay thread safety test does not expect an error during"+
+			" the second syslog call",
+	)
+
+	expectedLastCount := uint(2)
+	actualLastCount := s.count
+	assert.Equal(
+		t,
+		expectedLastCount,
+		actualLastCount,
+		"Delay thread safety test expects a different last count",
+	)
+}
