@@ -8,8 +8,6 @@ import (
 	"time"
 )
 
-var osHostname = os.Hostname
-
 type HumanReadable struct {
 	Syslogger Syslogger
 	Facility  pri.Priority
