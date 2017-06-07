@@ -81,7 +81,7 @@ func NewNativeSyslog(f pri.Priority, ident string) (*NativeSyslog, error) {
 		return nil, e
 	}
 
-	w, e := syslog.New(syslog.Priority(f.Facility()), ident)
+	w, e := syslogNew(syslog.Priority(f.Facility()), ident)
 	if e != nil {
 		return nil, e
 	}
