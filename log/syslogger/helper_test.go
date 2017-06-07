@@ -75,3 +75,18 @@ type errorWriter struct {
 func (e errorWriter) Write([]byte) (int, error) {
 	return 0, errors.New("Writing to an errorWriter")
 }
+
+type recordStringSyslog struct {
+	p pri.Priority
+	m string
+}
+
+func (rs *recordStringSyslog) Syslog(p pri.Priority, msg interface{}) error {
+	if s, ok := msg.(string); !ok {
+		return errors.New("Non-string passed to a recordStringSyslog")
+	} else {
+		rs.m = s
+		rs.p = p
+		return nil
+	}
+}
