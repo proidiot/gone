@@ -1,6 +1,7 @@
 package syslogger
 
 import (
+	"bufio"
 	"fmt"
 	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/pri"
@@ -8,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"log/syslog"
 	"net"
+	"regexp"
 	"testing"
 )
 
@@ -323,6 +325,283 @@ func TestDialNativeSyslog(t *testing.T) {
 					"NewNativeSyslog test expects no"+
 						" error when closing the"+
 						" tested NativeSyslog for: %s",
+					explanation,
+				),
+			)
+		}
+	}
+}
+
+func TestNativeSyslog(t *testing.T) {
+	type content struct {
+		S string
+		E error
+	}
+
+	comm := make(chan *content)
+	cancel := make(chan interface{})
+	defer close(cancel)
+
+	network := "unix"
+	go func(comm chan<- *content, cancel <-chan interface{}) {
+		defer close(comm)
+
+		l, e := net.Listen(network, "")
+		if e != nil {
+			comm <- &content{E: e}
+			return
+		}
+		go func(cancel <-chan interface{}, l net.Listener) {
+			<-cancel
+			l.Close()
+		}(cancel, l)
+		raddr := l.Addr().String()
+		comm <- &content{S: raddr}
+
+		for {
+			c, e := l.Accept()
+
+			// If the cancellation channel has been closed, the
+			// presumably that is why we'd see an Accept error, and
+			// attempting to write this error to the comm channel
+			// would panic.
+			select {
+			case <-cancel:
+				return
+			default:
+			}
+
+			if e != nil {
+				comm <- &content{
+					E: errors.New(
+						fmt.Sprintf(
+							"NativeSyslog test"+
+								" expects no"+
+								" error when"+
+								" accepting a"+
+								" new"+
+								" connection:"+
+								" %s",
+							e.Error(),
+						),
+					),
+				}
+				continue
+			}
+
+			r := bufio.NewReader(c)
+			rs, e := r.ReadString('\n')
+			if e != nil {
+				comm <- &content{
+					E: errors.New(
+						fmt.Sprintf(
+							"NativeSyslog test"+
+								" expects no"+
+								" error when"+
+								" reading"+
+								" with a"+
+								" syslog"+
+								" reader: %s",
+							e,
+						),
+					),
+				}
+				c.Close()
+				continue
+			}
+
+			e = c.Close()
+			if e != nil {
+				comm <- &content{
+					E: errors.New(
+						fmt.Sprintf(
+							"NativeSyslog test"+
+								" expects no"+
+								" error when"+
+								" closing a"+
+								" syslog"+
+								" reader: %s",
+							e,
+						),
+					),
+				}
+				continue
+			}
+
+			comm <- &content{S: rs[:len(rs)-1]}
+		}
+	}(comm, cancel)
+
+	listenerInfo := <-comm
+	require.NoError(
+		t,
+		listenerInfo.E,
+		"NativeSyslog test requires no error from creation of"+
+			" syslog listener",
+	)
+	raddr := listenerInfo.S
+
+	facility := pri.User
+	ident := "NativeSyslogTest"
+	n, e := DialNativeSyslog(
+		network,
+		raddr,
+		facility,
+		ident,
+	)
+	require.NoError(
+		t,
+		e,
+		"NativeSyslog test requires no error from creation of"+
+			" NativeSyslog under test",
+	)
+
+	type testCase struct {
+		inputPriority pri.Priority
+		inputMsg      interface{}
+		expectedError bool
+	}
+
+	tests := map[string]testCase{
+		"nil values": {
+			inputPriority: pri.Priority(0x0),
+			inputMsg:      nil,
+			expectedError: true,
+		},
+		"full values": {
+			inputPriority: pri.Priority(0xFF),
+			inputMsg:      "full values msg",
+			expectedError: true,
+		},
+		"emerg": {
+			inputPriority: pri.Emerg,
+			inputMsg:      "emerg msg",
+			expectedError: false,
+		},
+		"alert": {
+			inputPriority: pri.Alert,
+			inputMsg:      "alert msg",
+			expectedError: false,
+		},
+		"crit": {
+			inputPriority: pri.Crit,
+			inputMsg:      "crit msg",
+			expectedError: false,
+		},
+		"err": {
+			inputPriority: pri.Err,
+			inputMsg:      "err msg",
+			expectedError: false,
+		},
+		"warning": {
+			inputPriority: pri.Warning,
+			inputMsg:      "warning msg",
+			expectedError: false,
+		},
+		"notice": {
+			inputPriority: pri.Notice,
+			inputMsg:      "notice msg",
+			expectedError: false,
+		},
+		"info": {
+			inputPriority: pri.Info,
+			inputMsg:      "info msg",
+			expectedError: false,
+		},
+		"debug": {
+			inputPriority: pri.Debug,
+			inputMsg:      "debug msg",
+			expectedError: false,
+		},
+		"combined priority": {
+			inputPriority: pri.Syslog | pri.Notice,
+			inputMsg:      "combined priority msg",
+			expectedError: true,
+		},
+	}
+
+	for explanation, test := range tests {
+		actualError := n.Syslog(test.inputPriority, test.inputMsg)
+
+		if test.expectedError {
+			assert.Error(
+				t,
+				actualError,
+				fmt.Sprintf(
+					"NativeSyslog test expects an error"+
+						" for: %s",
+					explanation,
+				),
+			)
+		} else {
+			assert.NoError(
+				t,
+				actualError,
+				fmt.Sprintf(
+					"NativeSyslog test expects no error"+
+						" for: %s",
+					explanation,
+				),
+			)
+		}
+
+		// This assumes that if the error is nil then the listener will
+		// definitely send on comm. If we just assume that it is safe to
+		// proceed with this section if we don't expect an error, then
+		// an error occurring which leads to no communication happening
+		// will cause this test to hang forever.
+		if actualError == nil {
+			listenerResponse := <-comm
+			require.NotNil(
+				t,
+				listenerResponse,
+				fmt.Sprintf(
+					"NativeSyslog test expects non-nil"+
+						" listener response for: %s",
+					explanation,
+				),
+			)
+			assert.NoError(
+				t,
+				listenerResponse.E,
+				fmt.Sprintf(
+					"NativeSyslog test expects no"+
+						" listener error for: %s",
+					explanation,
+				),
+			)
+
+			var expectedRegex *regexp.Regexp
+			if s, ok := test.inputMsg.(string); ok {
+				expectedRegex = regexp.MustCompile(
+					fmt.Sprintf(
+						"^<%d>.*%s$",
+						facility|test.inputPriority,
+						regexp.QuoteMeta(s),
+					),
+				)
+			} else {
+				expectedRegex = regexp.MustCompile(
+					fmt.Sprintf(
+						"^<%d>.*$",
+						facility|test.inputPriority,
+					),
+				)
+			}
+
+			actualString := listenerResponse.S
+
+			assert.Regexp(
+				t,
+				expectedRegex,
+				actualString,
+				fmt.Sprintf(
+					"NativeSyslog test expects the raw"+
+						" syslog message to indicate"+
+						" the correct priority"+
+						" argument (and, if"+
+						" applicable, have the"+
+						" correct message) for: %s",
 					explanation,
 				),
 			)

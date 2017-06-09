@@ -59,16 +59,8 @@ func (n *NativeSyslog) Syslog(p pri.Priority, msg interface{}) error {
 		return n.w.Notice(m)
 	case pri.Info:
 		return n.w.Info(m)
-	case pri.Debug:
-		return n.w.Debug(m)
 	default:
-		return errors.New(
-			fmt.Sprintf(
-				"The given pri.Priority argument has an"+
-					" invalid pri.Severity component: %s",
-				p.Severity,
-			),
-		)
+		return n.w.Debug(m)
 	}
 }
 
