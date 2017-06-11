@@ -90,3 +90,10 @@ func (rs *recordStringSyslog) Syslog(p pri.Priority, msg interface{}) error {
 		return nil
 	}
 }
+
+type errorCloser struct {
+}
+
+func (e *errorCloser) Close() error {
+	return errors.New("Closing an errorCloser")
+}

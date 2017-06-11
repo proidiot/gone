@@ -19,19 +19,28 @@ type Posixish struct {
 	x sync.RWMutex
 }
 
-func (x *Posixish) Syslog(p pri.Priority, msg interface{}) error {
-	x.x.RLock()
+var posixishNewNativeSyslog = NewNativeSyslog
+var posixishOsOpen = os.Open
+var posixishNewDelay = NewDelay
+var posixishOsStderr = os.Stderr
+
+func (px *Posixish) Syslog(p pri.Priority, msg interface{}) error {
+	px.x.RLock()
 	// The read unlock isn't being deferred here because t.Syslog could
 	// take some time in the best case, but it might even need to acquire a
 	// write lock if the syslog connection creation is being deferred.
-	t := x.l
-	x.x.RUnlock()
+	t := px.l
+	px.x.RUnlock()
 
 	if t == nil {
-		x.x.Lock()
-		e := x.Openlog("", opt.Option(0), pri.User)
-		t = x.l
-		x.x.Unlock()
+		px.x.Lock()
+
+		px.f = pri.User
+
+		e := px.prepareDelay()
+		t = px.l
+
+		px.x.Unlock()
 
 		if e != nil {
 			return e
@@ -73,21 +82,7 @@ func (p *Posixish) Openlog(
 			return nil
 		}
 	} else {
-		l, e := NewDelay(
-			func() (Syslogger, error) {
-				p.x.Lock()
-				defer p.x.Unlock()
-				return p.openlog()
-			},
-		)
-
-		if e != nil {
-			return e
-		} else {
-			p.l = l
-
-			return nil
-		}
+		return p.prepareDelay()
 	}
 }
 
@@ -104,11 +99,36 @@ func (p *Posixish) Closelog() error {
 func (p *Posixish) SetLogMask(m mask.Mask) error {
 	p.x.Lock()
 	defer p.x.Unlock()
+	if p.l == nil {
+		p.f = pri.User
+
+		if e := p.prepareDelay(); e != nil {
+			return e
+		}
+	}
 	p.l = &SeverityMask{
 		Syslogger: p.l,
 		Mask:      m,
 	}
 	return nil
+}
+
+func (p *Posixish) prepareDelay() error {
+	l, e := posixishNewDelay(
+		func() (Syslogger, error) {
+			p.x.Lock()
+			defer p.x.Unlock()
+			return p.openlog()
+		},
+	)
+
+	if e != nil {
+		return e
+	} else {
+		p.l = l
+
+		return nil
+	}
 }
 
 func (p *Posixish) openlog() (Syslogger, error) {
@@ -118,13 +138,13 @@ func (p *Posixish) openlog() (Syslogger, error) {
 
 	var l Syslogger
 
-	if n, e := NewNativeSyslog(p.f, p.i); e != nil {
+	if n, e := posixishNewNativeSyslog(p.f, p.i); e == nil {
 		p.c = append(p.c, n)
 		l = n
 	}
 
 	if (p.o & opt.Cons) != 0 {
-		if f, e := os.Open("/dev/console"); e == nil {
+		if f, e := posixishOsOpen("/dev/console"); e == nil {
 			p.c = append(p.c, f)
 
 			c := &Rfc3164{
@@ -161,7 +181,7 @@ func (p *Posixish) openlog() (Syslogger, error) {
 		}
 	} else {
 		es := &Rfc3164{
-			Syslogger: &Writer{os.Stderr},
+			Syslogger: &Writer{posixishOsStderr},
 			Facility:  p.f,
 			Ident:     p.i,
 			Pid:       (p.o & opt.Pid) != 0,

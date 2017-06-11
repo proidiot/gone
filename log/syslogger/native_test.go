@@ -14,7 +14,7 @@ import (
 )
 
 func TestNewNativeSyslog(t *testing.T) {
-	var origSyslogNew = syslogNew
+	origSyslogNew := syslogNew
 	defer func() {
 		syslogNew = origSyslogNew
 	}()
