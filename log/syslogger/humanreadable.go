@@ -8,6 +8,9 @@ import (
 	"time"
 )
 
+// HumanReadable is a syslogger.Syslogger that will format the message in a
+// human readable way before passing the modified message to another
+// syslogger.Syslogger.
 type HumanReadable struct {
 	Syslogger Syslogger
 	Facility  pri.Priority
@@ -15,6 +18,8 @@ type HumanReadable struct {
 	Pid       bool
 }
 
+// Syslog logs a message. In the case of HumanReadable, the message will be
+// given a specific format and then forwarded to another syslogger.Syslogger.
 func (h *HumanReadable) Syslog(p pri.Priority, msg interface{}) error {
 	var s string
 	switch msg := msg.(type) {

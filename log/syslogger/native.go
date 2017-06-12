@@ -2,20 +2,24 @@ package syslogger
 
 import (
 	"fmt"
-	"github.com/proidiot/gone/errors"
+	gerrors "github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/pri"
 	"log/syslog"
 )
 
+// NativeSyslog is a syslogger.Syslogger that is a lightweight wrapper around
+// golang's native log/syslog.Writer.
 type NativeSyslog struct {
 	w *syslog.Writer
 	f pri.Priority
 }
 
+// Syslog logs a message. In the case of NativeSyslog, the message is sent to
+// golang's log/syslog.Writer.
 func (n *NativeSyslog) Syslog(p pri.Priority, msg interface{}) error {
 	m, goodType := msg.(string)
 	if !goodType {
-		return errors.New(
+		return gerrors.New(
 			"The native Go log/syslog system only accepts" +
 				" strings as a message, but a non-string" +
 				" message was given.",
@@ -23,7 +27,7 @@ func (n *NativeSyslog) Syslog(p pri.Priority, msg interface{}) error {
 	}
 
 	if p.Facility() != 0x00 && p.Facility() != n.f {
-		return errors.New(
+		return gerrors.New(
 			fmt.Sprintf(
 				"The native Go log/syslog system does not"+
 					" provide a mechanism for changing"+
@@ -64,10 +68,13 @@ func (n *NativeSyslog) Syslog(p pri.Priority, msg interface{}) error {
 	}
 }
 
+// Close closes a native log/syslog.Writer.
 func (n *NativeSyslog) Close() error {
 	return n.w.Close()
 }
 
+// NewNativeSyslog creates a new NativeSyslog based on the given log facility
+// and identity string.
 func NewNativeSyslog(f pri.Priority, ident string) (*NativeSyslog, error) {
 	if e := f.ValidFacility(); e != nil {
 		return nil, e
@@ -84,6 +91,7 @@ func NewNativeSyslog(f pri.Priority, ident string) (*NativeSyslog, error) {
 	}, nil
 }
 
+// DialNativeSyslog creates a new NativeSyslog based on using log/syslog.Dial.
 func DialNativeSyslog(
 	network string,
 	raddr string,

@@ -6,10 +6,14 @@ import (
 	"io"
 )
 
+// Writer is a syslogger.Syslogger that writes messages directly to an
+// io.Writer.
 type Writer struct {
 	Writer io.Writer
 }
 
+// Syslog logs a message. In the case of Writer, the message is written directly
+// to an arbitrary io.Writer.
 func (w *Writer) Syslog(p pri.Priority, msg interface{}) error {
 	if p != 0x00 {
 		return errors.New(

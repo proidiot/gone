@@ -1,7 +1,7 @@
 package syslogger
 
 import (
-	"github.com/proidiot/gone/errors"
+	gerrors "github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/mask"
 	"github.com/proidiot/gone/log/opt"
 	"github.com/proidiot/gone/log/pri"
@@ -10,6 +10,8 @@ import (
 	"sync"
 )
 
+// Posixish is a syslogger.Syslogger that behaves much like the syslog system
+// specified in POSIX.
 type Posixish struct {
 	i string
 	o opt.Option
@@ -24,6 +26,8 @@ var posixishOsOpen = os.Open
 var posixishNewDelay = NewDelay
 var posixishOsStderr = os.Stderr
 
+// Syslog logs a message. How this message is routed depends on what settings
+// were given to Openlog (and potentially a log mask).
 func (px *Posixish) Syslog(p pri.Priority, msg interface{}) error {
 	px.x.RLock()
 	// The read unlock isn't being deferred here because t.Syslog could
@@ -50,13 +54,15 @@ func (px *Posixish) Syslog(p pri.Priority, msg interface{}) error {
 	return t.Syslog(p, msg)
 }
 
-func (p *Posixish) Openlog(
+// Openlog re-initializes the Posixish based on the given opt.Option, overriding
+// any previous values.
+func (px *Posixish) Openlog(
 	ident string,
 	options opt.Option,
 	facility pri.Priority,
 ) error {
 	if (options&opt.NDelay) != 0 && (options&opt.ODelay) != 0 {
-		return errors.New(
+		return gerrors.New(
 			"LOG_ODELAY and LOG_NDELAY are both being passed to" +
 				" Openlog, but these options are mutually" +
 				" exclusive.",
@@ -67,91 +73,96 @@ func (p *Posixish) Openlog(
 		return e
 	}
 
-	p.x.Lock()
-	defer p.x.Unlock()
+	px.x.Lock()
+	defer px.x.Unlock()
 
-	p.i = ident
-	p.o = options
-	p.f = facility
+	px.i = ident
+	px.o = options
+	px.f = facility
 
-	if (p.o & opt.NDelay) != 0 {
-		if l, e := p.openlog(); e != nil {
-			return e
-		} else {
-			p.l = l
-			return nil
-		}
-	} else {
-		return p.prepareDelay()
-	}
-}
-
-func (p *Posixish) Close() error {
-	return p.Closelog()
-}
-
-func (p *Posixish) Closelog() error {
-	p.x.Lock()
-	defer p.x.Unlock()
-	return p.closelog()
-}
-
-func (p *Posixish) SetLogMask(m mask.Mask) error {
-	p.x.Lock()
-	defer p.x.Unlock()
-	if p.l == nil {
-		p.f = pri.User
-
-		if e := p.prepareDelay(); e != nil {
+	if (px.o & opt.NDelay) != 0 {
+		l, e := px.openlog()
+		if e != nil {
 			return e
 		}
+
+		px.l = l
+		return nil
 	}
-	p.l = &SeverityMask{
-		Syslogger: p.l,
+
+	return px.prepareDelay()
+}
+
+// Close closes a Posixish, which has basically no effect other than to reset
+// all the file descriptors.
+func (px *Posixish) Close() error {
+	return px.Closelog()
+}
+
+// Closelog closes a Posixish, which has basically no effect other than to reset
+// all the file descriptors.
+func (px *Posixish) Closelog() error {
+	px.x.Lock()
+	defer px.x.Unlock()
+	return px.closelog()
+}
+
+// SetLogMask sets the Posixish's log mask.Mask.
+func (px *Posixish) SetLogMask(m mask.Mask) error {
+	px.x.Lock()
+	defer px.x.Unlock()
+	if px.l == nil {
+		px.f = pri.User
+
+		if e := px.prepareDelay(); e != nil {
+			return e
+		}
+	}
+	px.l = &SeverityMask{
+		Syslogger: px.l,
 		Mask:      m,
 	}
 	return nil
 }
 
-func (p *Posixish) prepareDelay() error {
+func (px *Posixish) prepareDelay() error {
 	l, e := posixishNewDelay(
 		func() (Syslogger, error) {
-			p.x.Lock()
-			defer p.x.Unlock()
-			return p.openlog()
+			px.x.Lock()
+			defer px.x.Unlock()
+			return px.openlog()
 		},
 	)
 
 	if e != nil {
 		return e
-	} else {
-		p.l = l
-
-		return nil
 	}
+
+	px.l = l
+	return nil
 }
 
-func (p *Posixish) openlog() (Syslogger, error) {
-	if e := p.closelog(); e != nil {
+func (px *Posixish) openlog() (Syslogger, error) {
+	if e := px.closelog(); e != nil {
 		return nil, e
 	}
 
 	var l Syslogger
 
-	if n, e := posixishNewNativeSyslog(p.f, p.i); e == nil {
-		p.c = append(p.c, n)
+	if n, e := posixishNewNativeSyslog(px.f, px.i); e == nil {
+		px.c = append(px.c, n)
 		l = n
 	}
 
-	if (p.o & opt.Cons) != 0 {
+	if (px.o & opt.Cons) != 0 {
 		if f, e := posixishOsOpen("/dev/console"); e == nil {
-			p.c = append(p.c, f)
+			px.c = append(px.c, f)
 
 			c := &Rfc3164{
 				Syslogger: &Writer{f},
-				Facility:  p.f,
-				Ident:     p.i,
-				Pid:       (p.o & opt.Pid) != 0,
+				Facility:  px.f,
+				Ident:     px.i,
+				Pid:       (px.o & opt.Pid) != 0,
 			}
 
 			if l != nil {
@@ -165,9 +176,9 @@ func (p *Posixish) openlog() (Syslogger, error) {
 		}
 	}
 
-	if (p.o&opt.Perror) == 0 && (p.o&opt.NoFallback) != 0 {
+	if (px.o&opt.Perror) == 0 && (px.o&opt.NoFallback) != 0 {
 		if l == nil {
-			return nil, errors.New(
+			return nil, gerrors.New(
 				"The posixish.Syslogger was unable to" +
 					" connect to syslogd (and also" +
 					" unable to connect to the system" +
@@ -182,14 +193,14 @@ func (p *Posixish) openlog() (Syslogger, error) {
 	} else {
 		es := &Rfc3164{
 			Syslogger: &Writer{posixishOsStderr},
-			Facility:  p.f,
-			Ident:     p.i,
-			Pid:       (p.o & opt.Pid) != 0,
+			Facility:  px.f,
+			Ident:     px.i,
+			Pid:       (px.o & opt.Pid) != 0,
 		}
 
 		if l == nil {
 			l = es
-		} else if (p.o & opt.Perror) != 0 {
+		} else if (px.o & opt.Perror) != 0 {
 			l = &Multi{
 				Sysloggers: []Syslogger{
 					l,
@@ -205,24 +216,24 @@ func (p *Posixish) openlog() (Syslogger, error) {
 		}
 	}
 
-	if (p.o & opt.NoWait) != 0 {
+	if (px.o & opt.NoWait) != 0 {
 		l = &NoWait{l}
 	}
 
 	return l, nil
 }
 
-func (p *Posixish) closelog() error {
+func (px *Posixish) closelog() error {
 	var err error
 
-	for _, c := range p.c {
+	for _, c := range px.c {
 		e := c.Close()
 		if err == nil && e != nil {
 			err = e
 		}
 	}
 
-	p.l = nil
+	px.l = nil
 
 	return err
 }

@@ -82,13 +82,14 @@ type recordStringSyslog struct {
 }
 
 func (rs *recordStringSyslog) Syslog(p pri.Priority, msg interface{}) error {
-	if s, ok := msg.(string); !ok {
+	s, ok := msg.(string)
+	if !ok {
 		return errors.New("Non-string passed to a recordStringSyslog")
-	} else {
-		rs.m = s
-		rs.p = p
-		return nil
 	}
+
+	rs.m = s
+	rs.p = p
+	return nil
 }
 
 type errorCloser struct {

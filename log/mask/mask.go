@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// Log severity mask
+// Mask represents a log severity mask
 // See POSIX.1-2008. Also see POSIX.1-2001, RFC 3164, and RFC 5424.
 type Mask byte
 
@@ -35,14 +35,19 @@ var lookup = map[Mask]string{
 	Debug:   "LOG_DEBUG",
 }
 
+// UpTo creates a Mask that unmasks all log priorities up the given
+// pri.Priority.
 func UpTo(p pri.Priority) Mask {
 	return Mask((1 << (p.Severity() + 1)) - 1)
 }
 
+// Masked indicates whether a log message with the given pri.Priority should be
+// masked (i.e. hidden) by this Mask.
 func (m Mask) Masked(p pri.Priority) bool {
 	return (m & (1 << p.Severity())) == 0
 }
 
+// String creates a string representation of the Mask.
 func (m Mask) String() string {
 	if m == 0xFF {
 		return "LOG_UPTO(LOG_DEBUG)"
@@ -53,26 +58,28 @@ func (m Mask) String() string {
 			"LOG_UPTO(%s)",
 			lookup[(m+1)>>1],
 		)
-	} else {
-		masked := []string{}
-		for t := byte(1); t <= 0xFF && t != 0 && t <= byte(m); t *= 2 {
-			if (t & byte(m)) != 0 {
-				masked = append(masked, lookup[Mask(t)])
-			}
-		}
-		return fmt.Sprintf("LOG_MASK(%s)", strings.Join(masked, "|"))
 	}
+
+	masked := []string{}
+	for t := byte(1); t <= 0xFF && t != 0 && t <= byte(m); t *= 2 {
+		if (t & byte(m)) != 0 {
+			masked = append(masked, lookup[Mask(t)])
+		}
+	}
+	return fmt.Sprintf("LOG_MASK(%s)", strings.Join(masked, "|"))
 }
 
+// GetFromEnv gives the Mask indicated by environment variables (or else the
+// default Mask).
 func GetFromEnv() Mask {
 	if val, set := os.LookupEnv("LOG_UPTO"); set {
 		for mask, mstring := range lookup {
 			if val == mstring {
 				if mask == Debug {
 					return Mask(0xFF)
-				} else {
-					return (mask << 1) - 1
 				}
+
+				return (mask << 1) - 1
 			}
 		}
 

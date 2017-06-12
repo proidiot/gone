@@ -3,7 +3,7 @@ package syslogger
 import (
 	"bufio"
 	"fmt"
-	"github.com/proidiot/gone/errors"
+	gerrors "github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -67,7 +67,7 @@ func TestNewNativeSyslog(t *testing.T) {
 				syslog.Priority,
 				string,
 			) (*syslog.Writer, error) {
-				return nil, errors.New(
+				return nil, gerrors.New(
 					"Artificial error for syslog.New",
 				)
 			}
@@ -373,7 +373,7 @@ func TestNativeSyslog(t *testing.T) {
 
 			if e != nil {
 				comm <- &content{
-					E: errors.New(
+					E: gerrors.New(
 						fmt.Sprintf(
 							"NativeSyslog test"+
 								" expects no"+
@@ -393,7 +393,7 @@ func TestNativeSyslog(t *testing.T) {
 			rs, e := r.ReadString('\n')
 			if e != nil {
 				comm <- &content{
-					E: errors.New(
+					E: gerrors.New(
 						fmt.Sprintf(
 							"NativeSyslog test"+
 								" expects no"+
@@ -413,7 +413,7 @@ func TestNativeSyslog(t *testing.T) {
 			e = c.Close()
 			if e != nil {
 				comm <- &content{
-					E: errors.New(
+					E: gerrors.New(
 						fmt.Sprintf(
 							"NativeSyslog test"+
 								" expects no"+

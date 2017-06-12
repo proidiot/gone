@@ -93,7 +93,7 @@ func TestHumanReadableSyslog(t *testing.T) {
 	}
 
 	for explanation, test := range tests {
-		var origOsHostname func() (string, error) = osHostname
+		origOsHostname := osHostname
 		if test.causeOsHostnameError {
 			osHostname = func() (string, error) {
 				return "", errors.New(

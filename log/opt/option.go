@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+// Option represents a POSIX Openlog option. It is used to specify the behavior
+// of some syslog.Syslogger types.
 type Option byte
 
 const (
@@ -50,10 +52,10 @@ const (
 	// implementation, and so renders the NoFallback option useless.
 	Perror Option = 0x20
 
-	// Disable using stderr as a fallback when syslogd can't be reached.
-	// This option isn't POSIX, and it is very unusual default behavior,
-	// but proidiot likes it. This option is effectively meaningless if
-	// Perror is set.
+	// NoFallback disables using stderr as a fallback when syslogd can't be
+	// reached. This option isn't POSIX, and it is very unusual default
+	// behavior, but proidiot likes it. This option is effectively
+	// meaningless if Perror is set.
 	NoFallback Option = 0x40
 )
 
@@ -67,6 +69,8 @@ var lookup = map[Option]string{
 	NoFallback: "LOG_NOFALLBACK",
 }
 
+// GetFromEnv gives the bitwise-or of the Options indicated by environment
+// variables.
 func GetFromEnv() Option {
 	var o Option
 
@@ -79,6 +83,7 @@ func GetFromEnv() Option {
 	return o
 }
 
+// String creates a string representation of the Options.
 func (o Option) String() string {
 	if o == 0 {
 		return fmt.Sprintf("Option(%#x)", 0)

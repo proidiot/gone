@@ -118,7 +118,7 @@ func TestRfc3164Syslog(t *testing.T) {
 	}
 
 	for explanation, test := range tests {
-		var origOsHostname func() (string, error) = osHostname
+		var origOsHostname = osHostname
 		if test.causeOsHostnameError {
 			osHostname = func() (string, error) {
 				return "", errors.New(

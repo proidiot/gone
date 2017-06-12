@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-// Log Priority (bitwise or of facility and severity)
+// Priority represents a log priority (bitwise or of facility and severity).
 // See RFC 3164 Section 4.1.1, RFC 5424 Section 6.2.1, and RFC 5427 Section 3.
 type Priority byte
 
@@ -102,6 +102,9 @@ const (
 	// Local7 represents messages designated as local use 7.
 	Local7 Priority = (23 * 8)
 
+	// InvalidFacility is a standard error that indicates that the log
+	// facility component of a Priority does not represent a legitimate log
+	// facility.
 	InvalidFacility = errors.New(
 		"The facility portion of a pri.Priority can only have one of" +
 			" the 24 values from pri.Kern through pri.Local7." +
@@ -150,26 +153,30 @@ var lookupSeverity = map[Priority]string{
 	Debug:   "LOG_DEBUG",
 }
 
+// Facility gives the log facility component of a Priority.
 func (p Priority) Facility() Priority {
 	// Equivalent to pri.Kern | pri.User | ... | pri.Local7
 	mask := Priority(0xF8)
 	return p & mask
 }
 
+// ValidFacility indicates whether the facility component of a Priority
+// represents a legitimate log facility.
 func (p Priority) ValidFacility() error {
 	if p != p.Facility() || p > Local7 {
 		return InvalidFacility
-	} else {
-		return nil
 	}
+	return nil
 }
 
+// Severity gives the log severity component of a Priority.
 func (p Priority) Severity() Priority {
 	// Equivalent to LOG_EMERG | LOG_ALERT | ... | LOG_DEBUG
 	mask := Priority(0x07)
 	return p & mask
 }
 
+// String creates a string representation of the Priority.
 func (p Priority) String() string {
 	res := ""
 	if p.Facility() != 0 {
@@ -191,6 +198,9 @@ func (p Priority) String() string {
 	return res
 }
 
+// GetFromEnv gives the Priority indicated by environment variables (or else
+// the default Priority). This Priority will only include the log facility
+// component as log severity is always set when logs are created.
 func GetFromEnv() Priority {
 	if val, set := os.LookupEnv("LOG_FACILITY"); set {
 		for p, pstring := range lookupFacility {

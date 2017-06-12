@@ -2,12 +2,15 @@ package syslogger
 
 import (
 	"fmt"
-	"github.com/proidiot/gone/errors"
+	gerrors "github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/pri"
 	"os"
 	"time"
 )
 
+// Rfc3164 is a syslogger.Syslogger that will format the message in a way that
+// is intended to be compliant with RFC 3164 before passing the modified message
+// to another syslogger.Syslogger.
 type Rfc3164 struct {
 	Syslogger Syslogger
 	Facility  pri.Priority
@@ -15,10 +18,12 @@ type Rfc3164 struct {
 	Pid       bool
 }
 
+// Syslog logs a message. In the case of Rfc3164, the message is will be given a
+// specific format and then forwarded to another syslogger.Syslogger.
 func (r *Rfc3164) Syslog(p pri.Priority, msg interface{}) error {
 	content, goodType := msg.(string)
 	if !goodType {
-		return errors.New(
+		return gerrors.New(
 			"The syslogger.Rfc3164 expects the message argument" +
 				" to be a string, but the given message does" +
 				" not have the string type.",
@@ -64,7 +69,7 @@ func (r *Rfc3164) Syslog(p pri.Priority, msg interface{}) error {
 	)
 
 	if l := len([]byte(res)); l > 1024 {
-		return errors.New(
+		return gerrors.New(
 			fmt.Sprintf(
 				"The maximum total length of an RFC3164"+
 					" syslog message is 1024 bytes, but"+
