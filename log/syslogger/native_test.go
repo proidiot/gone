@@ -148,11 +148,7 @@ func TestNewNativeSyslog(t *testing.T) {
 }
 
 func TestDialNativeSyslog(t *testing.T) {
-	var origSyslogNew = syslogNew
-	defer func() {
-		syslogNew = origSyslogNew
-	}()
-
+	syslogNewWorks := true
 	if _, e := syslogNew(0, ""); e != nil {
 		t.Log(
 			"It seems that log/syslog.New is failing by default." +
@@ -165,12 +161,7 @@ func TestDialNativeSyslog(t *testing.T) {
 				" path in addition to the mock already" +
 				" being used for the sad path.",
 		)
-		syslogNew = func(
-			syslog.Priority,
-			string,
-		) (*syslog.Writer, error) {
-			return &syslog.Writer{}, nil
-		}
+		syslogNewWorks = false
 	}
 
 	udpNetwork := "udp"
@@ -224,8 +215,8 @@ func TestDialNativeSyslog(t *testing.T) {
 			inputRaddr:        "",
 			inputPriority:     pri.Priority(0x0),
 			inputIdent:        "",
-			expectedError:     false,
-			expectedSyslogger: true,
+			expectedError:     !syslogNewWorks,
+			expectedSyslogger: syslogNewWorks,
 		},
 		"full values": {
 			inputNetwork:  udpNetwork,
