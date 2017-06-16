@@ -91,21 +91,15 @@ func TestNewNativeSyslog(t *testing.T) {
 			assert.Error(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"NewNativeSyslog test expects an"+
-						" error for: %s",
-					explanation,
-				),
+				"NewNativeSyslog test expects an error for: %s",
+				explanation,
 			)
 		} else {
 			assert.NoError(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"NewNativeSyslog test expects no"+
-						" error for: %s",
-					explanation,
-				),
+				"NewNativeSyslog test expects no error for: %s",
+				explanation,
 			)
 		}
 
@@ -113,21 +107,17 @@ func TestNewNativeSyslog(t *testing.T) {
 			assert.NotNil(
 				t,
 				actualSyslogger,
-				fmt.Sprintf(
-					"NewNativeSyslog test expects non-nil"+
-						" syslogger for: %s",
-					explanation,
-				),
+				"NewNativeSyslog test expects non-nil"+
+					" syslogger for: %s",
+				explanation,
 			)
 		} else {
 			assert.Nil(
 				t,
 				actualSyslogger,
-				fmt.Sprintf(
-					"NewNativeSyslog test expects nil"+
-						" syslogger for: %s",
-					explanation,
-				),
+				"NewNativeSyslog test expects nil syslogger"+
+					" for: %s",
+				explanation,
 			)
 		}
 
@@ -136,12 +126,10 @@ func TestNewNativeSyslog(t *testing.T) {
 			assert.NoError(
 				t,
 				e,
-				fmt.Sprintf(
-					"NewNativeSyslog test expects no"+
-						" error when closing the"+
-						" tested NativeSyslog for: %s",
-					explanation,
-				),
+				"NewNativeSyslog test expects no error when"+
+					" closing the tested NativeSyslog for:"+
+					" %s",
+				explanation,
 			)
 		}
 	}
@@ -267,21 +255,17 @@ func TestDialNativeSyslog(t *testing.T) {
 			assert.Error(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"DialNativeSyslog test expects an"+
-						" error for: %s",
-					explanation,
-				),
+				"DialNativeSyslog test expects an error for:"+
+					" %s",
+				explanation,
 			)
 		} else {
 			assert.NoError(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"DialNativeSyslog test expects no"+
-						" error for: %s",
-					explanation,
-				),
+				"DialNativeSyslog test expects no error for:"+
+					" %s",
+				explanation,
 			)
 		}
 
@@ -289,21 +273,17 @@ func TestDialNativeSyslog(t *testing.T) {
 			assert.NotNil(
 				t,
 				actualSyslogger,
-				fmt.Sprintf(
-					"DialNativeSyslog test expects non-nil"+
-						" syslogger for: %s",
-					explanation,
-				),
+				"DialNativeSyslog test expects non-nil"+
+					" syslogger for: %s",
+				explanation,
 			)
 		} else {
 			assert.Nil(
 				t,
 				actualSyslogger,
-				fmt.Sprintf(
-					"DialNativeSyslog test expects nil"+
-						" syslogger for: %s",
-					explanation,
-				),
+				"DialNativeSyslog test expects nil syslogger"+
+					" for: %s",
+				explanation,
 			)
 		}
 
@@ -312,12 +292,10 @@ func TestDialNativeSyslog(t *testing.T) {
 			assert.NoError(
 				t,
 				e,
-				fmt.Sprintf(
-					"NewNativeSyslog test expects no"+
-						" error when closing the"+
-						" tested NativeSyslog for: %s",
-					explanation,
-				),
+				"NewNativeSyslog test expects no error when"+
+					" closing the tested NativeSyslog for:"+
+					" %s",
+				explanation,
 			)
 		}
 	}
@@ -502,21 +480,15 @@ func TestNativeSyslog(t *testing.T) {
 			assert.Error(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"NativeSyslog test expects an error"+
-						" for: %s",
-					explanation,
-				),
+				"NativeSyslog test expects an error for: %s",
+				explanation,
 			)
 		} else {
 			assert.NoError(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"NativeSyslog test expects no error"+
-						" for: %s",
-					explanation,
-				),
+				"NativeSyslog test expects no error for: %s",
+				explanation,
 			)
 		}
 
@@ -530,20 +502,16 @@ func TestNativeSyslog(t *testing.T) {
 			require.NotNil(
 				t,
 				listenerResponse,
-				fmt.Sprintf(
-					"NativeSyslog test expects non-nil"+
-						" listener response for: %s",
-					explanation,
-				),
+				"NativeSyslog test expects non-nil listener"+
+					" response for: %s",
+				explanation,
 			)
 			assert.NoError(
 				t,
 				listenerResponse.E,
-				fmt.Sprintf(
-					"NativeSyslog test expects no"+
-						" listener error for: %s",
-					explanation,
-				),
+				"NativeSyslog test expects no listener error"+
+					" for: %s",
+				explanation,
 			)
 
 			var expectedRegex *regexp.Regexp
@@ -570,15 +538,12 @@ func TestNativeSyslog(t *testing.T) {
 				t,
 				expectedRegex,
 				actualString,
-				fmt.Sprintf(
-					"NativeSyslog test expects the raw"+
-						" syslog message to indicate"+
-						" the correct priority"+
-						" argument (and, if"+
-						" applicable, have the"+
-						" correct message) for: %s",
-					explanation,
-				),
+				"NativeSyslog test expects the raw syslog"+
+					" message to indicate the correct"+
+					" priority argument (and, if"+
+					" applicable, have the correct"+
+					" message) for: %s",
+				explanation,
 			)
 		}
 	}

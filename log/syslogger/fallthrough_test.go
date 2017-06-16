@@ -1,7 +1,6 @@
 package syslogger
 
 import (
-	"fmt"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -82,21 +81,15 @@ func TestFallthroughSyslog(t *testing.T) {
 			assert.Error(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"Fallthrough test expected error"+
-						" for: %s",
-					explanation,
-				),
+				"Fallthrough test expected error for: %s",
+				explanation,
 			)
 		} else {
 			assert.NoError(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"Fallthrough test unexpected error"+
-						" for: %s",
-					explanation,
-				),
+				"Fallthrough test unexpected error for: %s",
+				explanation,
 			)
 		}
 
@@ -107,11 +100,9 @@ func TestFallthroughSyslog(t *testing.T) {
 				t,
 				test.expectedDefaultCall,
 				actualCall,
-				fmt.Sprintf(
-					"Fallthrough test call check failure"+
-						" on default syslogger for: %s",
-					explanation,
-				),
+				"Fallthrough test call check failure on"+
+					" default syslogger for: %s",
+				explanation,
 			)
 		}
 
@@ -122,12 +113,9 @@ func TestFallthroughSyslog(t *testing.T) {
 				t,
 				test.expectedFallthroughCall,
 				actualCall,
-				fmt.Sprintf(
-					"Fallthrough test call check failure"+
-						" on fallthrough syslogger"+
-						" for: %s",
-					explanation,
-				),
+				"Fallthrough test call check failure on"+
+					" fallthrough syslogger for: %s",
+				explanation,
 			)
 		}
 	}

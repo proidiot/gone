@@ -1,7 +1,6 @@
 package syslogger
 
 import (
-	"fmt"
 	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
@@ -145,21 +144,15 @@ func TestRfc3164Syslog(t *testing.T) {
 			assert.Error(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"Rfc3164 test expects an error"+
-						" for: %s",
-					explanation,
-				),
+				"Rfc3164 test expects an error for: %s",
+				explanation,
 			)
 		} else {
 			assert.NoError(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"Rfc3164 test expects no error"+
-						" for: %s",
-					explanation,
-				),
+				"Rfc3164 test expects no error for: %s",
+				explanation,
 			)
 		}
 
@@ -168,11 +161,8 @@ func TestRfc3164Syslog(t *testing.T) {
 			t,
 			test.expectedPriority,
 			actualPriority,
-			fmt.Sprintf(
-				"Rfc3164 test recorded the wrong"+
-					" pri.Priority for: %s",
-				explanation,
-			),
+			"Rfc3164 test recorded the wrong pri.Priority for: %s",
+			explanation,
 		)
 
 		if test.expectedMsg != nil {
@@ -181,11 +171,9 @@ func TestRfc3164Syslog(t *testing.T) {
 				t,
 				test.expectedMsg,
 				actualMsg,
-				fmt.Sprintf(
-					"Rfc3164 test recorded a"+
-						" non-matching string for: %s",
-					explanation,
-				),
+				"Rfc3164 test recorded a non-matching string"+
+					" for: %s",
+				explanation,
 			)
 		}
 

@@ -1,7 +1,6 @@
 package mask
 
 import (
-	"fmt"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
 	"os"
@@ -95,10 +94,8 @@ func TestMaskMasked(t *testing.T) {
 			t,
 			test.expected,
 			actual,
-			fmt.Sprintf(
-				"Masked test failed for: %s",
-				explanation,
-			),
+			"Masked test failed for: %s",
+			explanation,
 		)
 	}
 }
@@ -139,10 +136,8 @@ func TestMaskString(t *testing.T) {
 			t,
 			test.expected,
 			actual,
-			fmt.Sprintf(
-				"String test failed for: %s",
-				explanation,
-			),
+			"String test failed for: %s",
+			explanation,
 		)
 	}
 }
@@ -237,10 +232,8 @@ func TestMaskGetFromEnv(t *testing.T) {
 			t,
 			test.expected,
 			actual,
-			fmt.Sprintf(
-				"GetFromEnv test failed for: %s",
-				explanation,
-			),
+			"GetFromEnv test failed for: %s",
+			explanation,
 		)
 	}
 }

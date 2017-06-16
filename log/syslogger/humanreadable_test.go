@@ -1,7 +1,6 @@
 package syslogger
 
 import (
-	"fmt"
 	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
@@ -120,21 +119,15 @@ func TestHumanReadableSyslog(t *testing.T) {
 			assert.Error(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"HumanReadable test expects an error"+
-						" for: %s",
-					explanation,
-				),
+				"HumanReadable test expects an error for: %s",
+				explanation,
 			)
 		} else {
 			assert.NoError(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"HumanReadable test expects no error"+
-						" for: %s",
-					explanation,
-				),
+				"HumanReadable test expects no error for: %s",
+				explanation,
 			)
 		}
 
@@ -143,11 +136,9 @@ func TestHumanReadableSyslog(t *testing.T) {
 			t,
 			test.expectedPriority,
 			actualPriority,
-			fmt.Sprintf(
-				"HumanReadable test recorded the wrong"+
-					" pri.Priority for: %s",
-				explanation,
-			),
+			"HumanReadable test recorded the wrong pri.Priority"+
+				" for: %s",
+			explanation,
 		)
 
 		if test.expectedMsg != nil {
@@ -156,11 +147,9 @@ func TestHumanReadableSyslog(t *testing.T) {
 				t,
 				test.expectedMsg,
 				actualMsg,
-				fmt.Sprintf(
-					"HumanReadable test recorded a"+
-						" non-matching string for: %s",
-					explanation,
-				),
+				"HumanReadable test recorded a non-matching"+
+					" string for: %s",
+				explanation,
 			)
 		}
 

@@ -1,7 +1,6 @@
 package syslogger
 
 import (
-	"fmt"
 	"github.com/proidiot/gone/log/mask"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
@@ -71,21 +70,15 @@ func TestSeverityMaskSyslog(t *testing.T) {
 			assert.Error(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"SeverityMask test expected error"+
-						" for: %s",
-					explanation,
-				),
+				"SeverityMask test expected error for: %s",
+				explanation,
 			)
 		} else {
 			assert.NoError(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"SeverityMask test unexpected error"+
-						" for: %s",
-					explanation,
-				),
+				"SeverityMask test unexpected error for: %s",
+				explanation,
 			)
 		}
 
@@ -96,11 +89,8 @@ func TestSeverityMaskSyslog(t *testing.T) {
 				t,
 				test.expectedCall,
 				actualCall,
-				fmt.Sprintf(
-					"SeverityMask test call check"+
-						" failure for: %s",
-					explanation,
-				),
+				"SeverityMask test call check failure for: %s",
+				explanation,
 			)
 		}
 	}

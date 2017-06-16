@@ -1,7 +1,6 @@
 package syslogger
 
 import (
-	"fmt"
 	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
@@ -62,19 +61,15 @@ func TestDelayNewDelay(t *testing.T) {
 			assert.Error(
 				t,
 				actualNewDelayError,
-				fmt.Sprintf(
-					"Delay test expected error for: %s",
-					explanation,
-				),
+				"Delay test expected error for: %s",
+				explanation,
 			)
 		} else {
 			assert.NoError(
 				t,
 				actualNewDelayError,
-				fmt.Sprintf(
-					"Delay test unexpected error for: %s",
-					explanation,
-				),
+				"Delay test unexpected error for: %s",
+				explanation,
 			)
 		}
 
@@ -85,21 +80,15 @@ func TestDelayNewDelay(t *testing.T) {
 				assert.Error(
 					t,
 					actualError,
-					fmt.Sprintf(
-						"Delay test expected error"+
-							" for: %s",
-						explanation,
-					),
+					"Delay test expected error for: %s",
+					explanation,
 				)
 			} else {
 				assert.NoError(
 					t,
 					actualError,
-					fmt.Sprintf(
-						"Delay test unexpected error"+
-							" for: %s",
-						explanation,
-					),
+					"Delay test unexpected error for: %s",
+					explanation,
 				)
 			}
 
@@ -109,25 +98,20 @@ func TestDelayNewDelay(t *testing.T) {
 				assert.Nil(
 					t,
 					actualSyslogHandler,
-					fmt.Sprintf(
-						"Delay test expected the"+
-							" syslogger handler to"+
-							" be nil due to errors"+
-							" during creation for:"+
-							" %s",
-						explanation,
-					),
+					"Delay test expected the syslogger"+
+						" handler to be nil due to"+
+						" errors during creation for:"+
+						" %s",
+					explanation,
 				)
 			} else {
 				assert.NotNil(
 					t,
 					actualSyslogHandler,
-					fmt.Sprintf(
-						"Delay test expected the"+
-							" syslogger handler to"+
-							" not be nil for: %s",
-						explanation,
-					),
+					"Delay test expected the syslogger"+
+						" handler to not be nil for:"+
+						" %s",
+					explanation,
 				)
 			}
 
@@ -138,12 +122,9 @@ func TestDelayNewDelay(t *testing.T) {
 					t,
 					test.expectedSyslogger,
 					actualSyslogger,
-					fmt.Sprintf(
-						"Delay test did not generate"+
-							" the expected"+
-							" syslogger for: %s",
-						explanation,
-					),
+					"Delay test did not generate the"+
+						" expected syslogger for: %s",
+					explanation,
 				)
 			}
 		}

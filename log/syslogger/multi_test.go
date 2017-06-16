@@ -1,7 +1,6 @@
 package syslogger
 
 import (
-	"fmt"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -147,10 +146,8 @@ func TestMultiSyslog(t *testing.T) {
 			assert.Error(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"Multi test expected error for: %s",
-					explanation,
-				),
+				"Multi test expected error for: %s",
+				explanation,
 			)
 
 			if test.expectedErrorSourceIndex != 0 {
@@ -161,13 +158,10 @@ func TestMultiSyslog(t *testing.T) {
 					t,
 					expectedType,
 					actualError,
-					fmt.Sprintf(
-						"Multi test expected error"+
-							" from a log/"+
-							"syslogger.errorSyslog"+
-							" for: %s",
-						explanation,
-					),
+					"Multi test expected error from a"+
+						" log/syslogger.errorSyslog"+
+						" for: %s",
+					explanation,
 				)
 
 				ese, ok := actualError.(*errorSysloggerError)
@@ -179,15 +173,11 @@ func TestMultiSyslog(t *testing.T) {
 						t,
 						expectedSrc,
 						actualSrc,
-						fmt.Sprintf(
-							"Multi test expected"+
-								" error to"+
-								" come from"+
-								" syslogger %d"+
-								" for: %s",
-							i,
-							explanation,
-						),
+						"Multi test expected error to"+
+							" come from syslogger"+
+							" %d for: %s",
+						i,
+						explanation,
 					)
 				}
 			}
@@ -195,10 +185,8 @@ func TestMultiSyslog(t *testing.T) {
 			assert.NoError(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"Multi test unexpected error for: %s",
-					explanation,
-				),
+				"Multi test unexpected error for: %s",
+				explanation,
 			)
 		}
 
@@ -210,12 +198,9 @@ func TestMultiSyslog(t *testing.T) {
 					t,
 					test.expectedCall[idx],
 					actualCall,
-					fmt.Sprintf(
-						"Multi test call check failure"+
-							" on default syslogger"+
-							" for: %s",
-						explanation,
-					),
+					"Multi test call check failure on"+
+						" default syslogger for: %s",
+					explanation,
 				)
 			}
 		}

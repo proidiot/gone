@@ -1,7 +1,6 @@
 package syslogger
 
 import (
-	"fmt"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -44,19 +43,15 @@ func TestNoWaitSyslog(t *testing.T) {
 			assert.Error(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"NoWait test expected error for: %s",
-					explanation,
-				),
+				"NoWait test expected error for: %s",
+				explanation,
 			)
 		} else {
 			assert.NoError(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"NoWait test unexpected error for: %s",
-					explanation,
-				),
+				"NoWait test unexpected error for: %s",
+				explanation,
 			)
 		}
 
@@ -68,11 +63,8 @@ func TestNoWaitSyslog(t *testing.T) {
 				t,
 				test.expectedCall,
 				actualCall,
-				fmt.Sprintf(
-					"NoWait test call check failure for:"+
-						" %s",
-					explanation,
-				),
+				"NoWait test call check failure for: %s",
+				explanation,
 			)
 		}
 	}

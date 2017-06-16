@@ -1,7 +1,6 @@
 package syslogger
 
 import (
-	"fmt"
 	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/mask"
 	"github.com/proidiot/gone/log/opt"
@@ -209,21 +208,17 @@ func TestPosixishOpenlog(t *testing.T) {
 			assert.Error(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"Posixish Openlog test expects an"+
-						" error for: %s",
-					explanation,
-				),
+				"Posixish Openlog test expects an error for:"+
+					" %s",
+				explanation,
 			)
 		} else {
 			assert.NoError(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"Posixish Openlog test expects no"+
-						" error for: %s",
-					explanation,
-				),
+				"Posixish Openlog test expects no error for:"+
+					" %s",
+				explanation,
 			)
 		}
 
@@ -232,11 +227,9 @@ func TestPosixishOpenlog(t *testing.T) {
 			t,
 			test.expectedSysloggerType,
 			actualSyslogger,
-			fmt.Sprintf(
-				"Posixish Openlog test expects a specific"+
-					" syslogger for: %s",
-				explanation,
-			),
+			"Posixish Openlog test expects a specific syslogger"+
+				" for: %s",
+			explanation,
 		)
 
 		actualClosers := p.c
@@ -246,11 +239,9 @@ func TestPosixishOpenlog(t *testing.T) {
 			t,
 			actualClosers,
 			len(test.expectedClosers),
-			fmt.Sprintf(
-				"Posixish Openlog test expects specific"+
-					" closers for: %s",
-				explanation,
-			),
+			"Posixish Openlog test expects specific closers for:"+
+				" %s",
+			explanation,
 		)
 
 		p.Close()
@@ -358,21 +349,15 @@ func TestPosixishSyslog(t *testing.T) {
 			assert.Error(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"Posixish Syslog test expects an"+
-						" error for: %s",
-					explanation,
-				),
+				"Posixish Syslog test expects an error for: %s",
+				explanation,
 			)
 		} else {
 			assert.NoError(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"Posixish Syslog test expects no"+
-						" error for: %s",
-					explanation,
-				),
+				"Posixish Syslog test expects no error for: %s",
+				explanation,
 			)
 		}
 	}
@@ -432,21 +417,17 @@ func TestPosixishSetLogMask(t *testing.T) {
 			assert.Error(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"Posixish SetLogMask test expects an"+
-						" error for: %s",
-					explanation,
-				),
+				"Posixish SetLogMask test expects an error"+
+					" for: %s",
+				explanation,
 			)
 		} else {
 			assert.NoError(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"Posixish SetLogMask test expects no"+
-						" error for: %s",
-					explanation,
-				),
+				"Posixish SetLogMask test expects no error"+
+					" for: %s",
+				explanation,
 			)
 		}
 
@@ -456,13 +437,10 @@ func TestPosixishSetLogMask(t *testing.T) {
 				t,
 				&SeverityMask{},
 				actualSyslogger,
-				fmt.Sprintf(
-					"Posixish SetLogMask test expects a"+
-						" *syslogger.SeverityMask as"+
-						" the Posixish syslogger for:"+
-						" %s",
-					explanation,
-				),
+				"Posixish SetLogMask test expects a"+
+					" *syslogger.SeverityMask as the"+
+					" Posixish syslogger for: %s",
+				explanation,
 			)
 
 			if s, ok := actualSyslogger.(*SeverityMask); ok {
@@ -471,12 +449,10 @@ func TestPosixishSetLogMask(t *testing.T) {
 					t,
 					test.expectedMaskedSyslogger,
 					actualMaskedSyslogger,
-					fmt.Sprintf(
-						"Posixish SetLogMask expects"+
-							" a different masked"+
-							" syslogger for: %s",
-						explanation,
-					),
+					"Posixish SetLogMask expects a"+
+						" different masked syslogger"+
+						" for: %s",
+					explanation,
 				)
 			}
 		}

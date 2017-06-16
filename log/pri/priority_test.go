@@ -1,7 +1,6 @@
 package pri
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
@@ -47,10 +46,8 @@ func TestPriFacility(t *testing.T) {
 			t,
 			test.expected,
 			actual,
-			fmt.Sprintf(
-				"Facility test failed for test case: %s",
-				explanation,
-			),
+			"Facility test failed for test case: %s",
+			explanation,
 		)
 	}
 }
@@ -95,21 +92,17 @@ func TestPriValidFacility(t *testing.T) {
 			assert.Error(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"ValidFacility test had false"+
-						" negative for test case: %s",
-					explanation,
-				),
+				"ValidFacility test had false negative for"+
+					" test case: %s",
+				explanation,
 			)
 		} else {
 			assert.NoError(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"ValidFacility test had false"+
-						" positive for test case: %s",
-					explanation,
-				),
+				"ValidFacility test had false positive for"+
+					" test case: %s",
+				explanation,
 			)
 		}
 	}
@@ -155,10 +148,8 @@ func TestPriSeverity(t *testing.T) {
 			t,
 			test.expected,
 			actual,
-			fmt.Sprintf(
-				"Severity test failed for test case: %s",
-				explanation,
-			),
+			"Severity test failed for test case: %s",
+			explanation,
 		)
 	}
 }
@@ -203,10 +194,8 @@ func TestPriString(t *testing.T) {
 			t,
 			test.expected,
 			actual,
-			fmt.Sprintf(
-				"String test failed for test case: %s",
-				explanation,
-			),
+			"String test failed for test case: %s",
+			explanation,
 		)
 	}
 }
@@ -283,10 +272,8 @@ func TestPriGetFromEnv(t *testing.T) {
 			t,
 			test.expected,
 			actual,
-			fmt.Sprintf(
-				"GetFromEnv test failed for: %s",
-				explanation,
-			),
+			"GetFromEnv test failed for: %s",
+			explanation,
 		)
 	}
 }

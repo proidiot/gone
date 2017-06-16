@@ -2,7 +2,6 @@ package syslogger
 
 import (
 	"bytes"
-	"fmt"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -76,19 +75,15 @@ func TestWriterSyslog(t *testing.T) {
 			assert.Error(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"Writer test expected error for: %s",
-					explanation,
-				),
+				"Writer test expected error for: %s",
+				explanation,
 			)
 		} else {
 			assert.NoError(
 				t,
 				actualError,
-				fmt.Sprintf(
-					"Writer test unexpected error for: %s",
-					explanation,
-				),
+				"Writer test unexpected error for: %s",
+				explanation,
 			)
 		}
 
@@ -96,10 +91,8 @@ func TestWriterSyslog(t *testing.T) {
 			t,
 			test.expectedBytes,
 			actualBytes.Bytes(),
-			fmt.Sprintf(
-				"Writer test bytes check failure for: %s",
-				explanation,
-			),
+			"Writer test bytes check failure for: %s",
+			explanation,
 		)
 	}
 }

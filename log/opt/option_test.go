@@ -1,7 +1,6 @@
 package opt
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
@@ -119,10 +118,8 @@ func TestOptGetFromEnv(t *testing.T) {
 			t,
 			test.expected,
 			actual,
-			fmt.Sprintf(
-				"GetFromEnv test failed for: %s",
-				test.explanation,
-			),
+			"GetFromEnv test failed for: %s",
+			test.explanation,
 		)
 	}
 }
@@ -210,10 +207,8 @@ func TestOptString(t *testing.T) {
 			t,
 			test.expected,
 			actual,
-			fmt.Sprintf(
-				"GetFromEnv test failed for: %s",
-				test.explanation,
-			),
+			"GetFromEnv test failed for: %s",
+			test.explanation,
 		)
 	}
 }
