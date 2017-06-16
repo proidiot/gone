@@ -39,10 +39,8 @@ func TestMaskUpTo(t *testing.T) {
 			t,
 			test.expected,
 			actual,
-			fmt.Sprintf(
-				"UpTo test failed for: %s",
-				explanation,
-			),
+			"UpTo test failed for: %s",
+			explanation,
 		)
 	}
 }
