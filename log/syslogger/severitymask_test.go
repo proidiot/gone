@@ -49,8 +49,8 @@ func TestSeverityMaskSyslog(t *testing.T) {
 	}
 
 	for explanation, test := range tests {
-		es := errorSyslog{}
-		fs := flagSyslog{}
+		es := errorSyslogger{}
+		fs := flagSyslogger{}
 
 		var s2 Syslogger
 
@@ -90,7 +90,7 @@ func TestSeverityMaskSyslog(t *testing.T) {
 		}
 
 		if !test.inputBadSyslog {
-			actualCall := fs.flag
+			actualCall := fs.Flag
 
 			assert.Equal(
 				t,

@@ -23,47 +23,47 @@ func TestFallthroughSyslog(t *testing.T) {
 			expectedError:    true,
 		},
 		"error default, nil fallthrough": {
-			inputDefault:     &errorSyslog{},
+			inputDefault:     &errorSyslogger{},
 			inputFallthrough: nil,
 			expectedError:    true,
 		},
 		"working default, nil fallthrough": {
-			inputDefault:        &flagSyslog{},
+			inputDefault:        &flagSyslogger{},
 			inputFallthrough:    nil,
 			expectedError:       false,
 			expectedDefaultCall: true,
 		},
 		"nil default, error fallthrough": {
 			inputDefault:     nil,
-			inputFallthrough: &errorSyslog{},
+			inputFallthrough: &errorSyslogger{},
 			expectedError:    true,
 		},
 		"error default, error fallthrough": {
-			inputDefault:     &errorSyslog{},
-			inputFallthrough: &errorSyslog{},
+			inputDefault:     &errorSyslogger{},
+			inputFallthrough: &errorSyslogger{},
 			expectedError:    true,
 		},
 		"working default, error fallthrough": {
-			inputDefault:        &flagSyslog{},
-			inputFallthrough:    &errorSyslog{},
+			inputDefault:        &flagSyslogger{},
+			inputFallthrough:    &errorSyslogger{},
 			expectedError:       false,
 			expectedDefaultCall: true,
 		},
 		"nil default, working fallthrough": {
 			inputDefault:            nil,
-			inputFallthrough:        &flagSyslog{},
+			inputFallthrough:        &flagSyslogger{},
 			expectedError:           false,
 			expectedFallthroughCall: true,
 		},
 		"error default, working fallthrough": {
-			inputDefault:            &errorSyslog{},
-			inputFallthrough:        &flagSyslog{},
+			inputDefault:            &errorSyslogger{},
+			inputFallthrough:        &flagSyslogger{},
 			expectedError:           false,
 			expectedFallthroughCall: true,
 		},
 		"working default, working fallthrough": {
-			inputDefault:            &flagSyslog{},
-			inputFallthrough:        &flagSyslog{},
+			inputDefault:            &flagSyslogger{},
+			inputFallthrough:        &flagSyslogger{},
 			expectedError:           false,
 			expectedDefaultCall:     true,
 			expectedFallthroughCall: false,
@@ -100,8 +100,8 @@ func TestFallthroughSyslog(t *testing.T) {
 			)
 		}
 
-		if fs, ok := test.inputDefault.(*flagSyslog); ok {
-			actualCall := fs.flag
+		if fs, ok := test.inputDefault.(*flagSyslogger); ok {
+			actualCall := fs.Flag
 
 			assert.Equal(
 				t,
@@ -115,8 +115,8 @@ func TestFallthroughSyslog(t *testing.T) {
 			)
 		}
 
-		if fs, ok := test.inputFallthrough.(*flagSyslog); ok {
-			actualCall := fs.flag
+		if fs, ok := test.inputFallthrough.(*flagSyslogger); ok {
+			actualCall := fs.Flag
 
 			assert.Equal(
 				t,

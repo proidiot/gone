@@ -130,7 +130,7 @@ func TestRfc3164Syslog(t *testing.T) {
 			}()
 		}
 
-		rs := recordStringSyslog{}
+		rs := recordStringSyslogger{}
 
 		h := &Rfc3164{
 			Syslogger: &rs,
@@ -163,7 +163,7 @@ func TestRfc3164Syslog(t *testing.T) {
 			)
 		}
 
-		actualPriority := rs.p
+		actualPriority := rs.P
 		assert.Equal(
 			t,
 			test.expectedPriority,
@@ -176,7 +176,7 @@ func TestRfc3164Syslog(t *testing.T) {
 		)
 
 		if test.expectedMsg != nil {
-			actualMsg := rs.m
+			actualMsg := rs.M
 			assert.Regexp(
 				t,
 				test.expectedMsg,

@@ -105,7 +105,7 @@ func TestHumanReadableSyslog(t *testing.T) {
 			}()
 		}
 
-		rs := recordStringSyslog{}
+		rs := recordStringSyslogger{}
 
 		h := &HumanReadable{
 			Syslogger: &rs,
@@ -138,7 +138,7 @@ func TestHumanReadableSyslog(t *testing.T) {
 			)
 		}
 
-		actualPriority := rs.p
+		actualPriority := rs.P
 		assert.Equal(
 			t,
 			test.expectedPriority,
@@ -151,7 +151,7 @@ func TestHumanReadableSyslog(t *testing.T) {
 		)
 
 		if test.expectedMsg != nil {
-			actualMsg := rs.m
+			actualMsg := rs.M
 			assert.Regexp(
 				t,
 				test.expectedMsg,

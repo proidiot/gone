@@ -1,7 +1,7 @@
 package syslogger
 
 import (
-	gerrors "github.com/proidiot/gone/errors"
+	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/mask"
 	"github.com/proidiot/gone/log/opt"
 	"github.com/proidiot/gone/log/pri"
@@ -62,7 +62,7 @@ func (px *Posixish) Openlog(
 	facility pri.Priority,
 ) error {
 	if (options&opt.NDelay) != 0 && (options&opt.ODelay) != 0 {
-		return gerrors.New(
+		return errors.New(
 			"LOG_ODELAY and LOG_NDELAY are both being passed to" +
 				" Openlog, but these options are mutually" +
 				" exclusive.",
@@ -178,7 +178,7 @@ func (px *Posixish) openlog() (Syslogger, error) {
 
 	if (px.o&opt.Perror) == 0 && (px.o&opt.NoFallback) != 0 {
 		if l == nil {
-			return nil, gerrors.New(
+			return nil, errors.New(
 				"The posixish.Syslogger was unable to" +
 					" connect to syslogd (and also" +
 					" unable to connect to the system" +

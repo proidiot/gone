@@ -2,7 +2,7 @@ package syslogger
 
 import (
 	"fmt"
-	gerrors "github.com/proidiot/gone/errors"
+	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/pri"
 	"log/syslog"
 )
@@ -19,7 +19,7 @@ type NativeSyslog struct {
 func (n *NativeSyslog) Syslog(p pri.Priority, msg interface{}) error {
 	m, goodType := msg.(string)
 	if !goodType {
-		return gerrors.New(
+		return errors.New(
 			"The native Go log/syslog system only accepts" +
 				" strings as a message, but a non-string" +
 				" message was given.",
@@ -27,24 +27,19 @@ func (n *NativeSyslog) Syslog(p pri.Priority, msg interface{}) error {
 	}
 
 	if p.Facility() != 0x00 && p.Facility() != n.f {
-		return gerrors.New(
-			fmt.Sprintf(
-				"The native Go log/syslog system does not"+
-					" provide a mechanism for changing"+
-					" log facilities of an existing"+
-					" *syslog.Writer, but the"+
-					" pri.Facility this"+
-					" *syslogger.NativeSyslog was"+
-					" created with does not match the"+
-					" pri.Facility component of the"+
-					" given pr.Priority. This"+
-					" *syslogger.NativeSyslog was"+
-					" created with pri.Facility %s, but"+
-					" the given pri.Priority argument"+
-					" has pri.Facility: %s",
-				n.f,
-				p.Facility,
-			),
+		return fmt.Errorf(
+			"The native Go log/syslog system does not provide a"+
+				" mechanism for changing log facilities of an"+
+				" existing *syslog.Writer, but the"+
+				" pri.Facility this *syslogger.NativeSyslog"+
+				" was created with does not match the"+
+				" pri.Facility component of the given"+
+				" pr.Priority. This *syslogger.NativeSyslog"+
+				" was created with pri.Facility %s, but the"+
+				" given pri.Priority argument has"+
+				" pri.Facility: %s",
+			n.f,
+			p.Facility,
 		)
 	}
 

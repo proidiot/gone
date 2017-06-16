@@ -17,8 +17,8 @@ func TestDelayNewDelay(t *testing.T) {
 		expectedSyslogger              Syslogger
 	}
 
-	el := errorSyslog{}
-	fl := flagSyslog{}
+	el := errorSyslogger{}
+	fl := flagSyslogger{}
 
 	tests := map[string]testCase{
 		"nil values": {
@@ -151,7 +151,7 @@ func TestDelayNewDelay(t *testing.T) {
 }
 
 func TestDelayThreadSafety(t *testing.T) {
-	s, sc := newSyncCountSyslog()
+	s, sc := newSyncCountSyslogger()
 	defer close(sc)
 
 	d, e := NewDelay(
@@ -177,7 +177,7 @@ func TestDelayThreadSafety(t *testing.T) {
 	go testFunc("2")
 
 	expectedInitialCount := uint(0)
-	actualInitialCount := s.count
+	actualInitialCount := s.Count
 	assert.Equal(
 		t,
 		expectedInitialCount,
@@ -196,7 +196,7 @@ func TestDelayThreadSafety(t *testing.T) {
 	)
 
 	expectedMiddleCount := uint(1)
-	actualMiddleCount := s.count
+	actualMiddleCount := s.Count
 	assert.Equal(
 		t,
 		expectedMiddleCount,
@@ -215,7 +215,7 @@ func TestDelayThreadSafety(t *testing.T) {
 	)
 
 	expectedLastCount := uint(2)
-	actualLastCount := s.count
+	actualLastCount := s.Count
 	assert.Equal(
 		t,
 		expectedLastCount,

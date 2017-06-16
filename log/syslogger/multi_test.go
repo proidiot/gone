@@ -23,7 +23,7 @@ func TestMultiSyslog(t *testing.T) {
 		},
 		"one valid": {
 			inputSysloggers: []Syslogger{
-				&flagSyslog{},
+				&flagSyslogger{},
 			},
 			expectedError: false,
 			expectedCall: []bool{
@@ -32,14 +32,14 @@ func TestMultiSyslog(t *testing.T) {
 		},
 		"one error": {
 			inputSysloggers: []Syslogger{
-				&errorSyslog{},
+				&errorSyslogger{},
 			},
 			expectedError:            true,
 			expectedErrorSourceIndex: 0,
 		},
 		"one error, try all": {
 			inputSysloggers: []Syslogger{
-				&errorSyslog{},
+				&errorSyslogger{},
 			},
 			inputTryAll:              true,
 			expectedError:            true,
@@ -47,9 +47,9 @@ func TestMultiSyslog(t *testing.T) {
 		},
 		"three valid": {
 			inputSysloggers: []Syslogger{
-				&flagSyslog{},
-				&flagSyslog{},
-				&flagSyslog{},
+				&flagSyslogger{},
+				&flagSyslogger{},
+				&flagSyslogger{},
 			},
 			expectedError: false,
 			expectedCall: []bool{
@@ -60,9 +60,9 @@ func TestMultiSyslog(t *testing.T) {
 		},
 		"middle error": {
 			inputSysloggers: []Syslogger{
-				&flagSyslog{},
-				&errorSyslog{},
-				&flagSyslog{},
+				&flagSyslogger{},
+				&errorSyslogger{},
+				&flagSyslogger{},
 			},
 			expectedError:            true,
 			expectedErrorSourceIndex: 1,
@@ -74,9 +74,9 @@ func TestMultiSyslog(t *testing.T) {
 		},
 		"middle error, try all": {
 			inputSysloggers: []Syslogger{
-				&flagSyslog{},
-				&errorSyslog{},
-				&flagSyslog{},
+				&flagSyslogger{},
+				&errorSyslogger{},
+				&flagSyslogger{},
 			},
 			inputTryAll:              true,
 			expectedError:            true,
@@ -89,16 +89,16 @@ func TestMultiSyslog(t *testing.T) {
 		},
 		"two errors": {
 			inputSysloggers: []Syslogger{
-				&errorSyslog{},
-				&errorSyslog{},
+				&errorSyslogger{},
+				&errorSyslogger{},
 			},
 			expectedError:            true,
 			expectedErrorSourceIndex: 0,
 		},
 		"two errors, try all": {
 			inputSysloggers: []Syslogger{
-				&errorSyslog{},
-				&errorSyslog{},
+				&errorSyslogger{},
+				&errorSyslogger{},
 			},
 			inputTryAll:              true,
 			expectedError:            true,
@@ -106,9 +106,9 @@ func TestMultiSyslog(t *testing.T) {
 		},
 		"last two errors": {
 			inputSysloggers: []Syslogger{
-				&flagSyslog{},
-				&errorSyslog{},
-				&errorSyslog{},
+				&flagSyslogger{},
+				&errorSyslogger{},
+				&errorSyslogger{},
 			},
 			expectedError:            true,
 			expectedErrorSourceIndex: 1,
@@ -120,9 +120,9 @@ func TestMultiSyslog(t *testing.T) {
 		},
 		"last errors, try all": {
 			inputSysloggers: []Syslogger{
-				&flagSyslog{},
-				&errorSyslog{},
-				&errorSyslog{},
+				&flagSyslogger{},
+				&errorSyslogger{},
+				&errorSyslogger{},
 			},
 			inputTryAll:              true,
 			expectedError:            true,
@@ -155,7 +155,7 @@ func TestMultiSyslog(t *testing.T) {
 
 			if test.expectedErrorSourceIndex != 0 {
 				i := test.expectedErrorSourceIndex
-				expectedType := &errorSyslogError{}
+				expectedType := &errorSysloggerError{}
 
 				assert.IsType(
 					t,
@@ -170,10 +170,10 @@ func TestMultiSyslog(t *testing.T) {
 					),
 				)
 
-				ese, ok := actualError.(*errorSyslogError)
+				ese, ok := actualError.(*errorSysloggerError)
 				if ok {
 					expectedSrc := test.inputSysloggers[i]
-					actualSrc := ese.s
+					actualSrc := ese.S
 
 					assert.Equal(
 						t,
@@ -203,8 +203,8 @@ func TestMultiSyslog(t *testing.T) {
 		}
 
 		for idx, s := range test.inputSysloggers {
-			if fs, ok := s.(*flagSyslog); ok {
-				actualCall := fs.flag
+			if fs, ok := s.(*flagSyslogger); ok {
+				actualCall := fs.Flag
 
 				assert.Equal(
 					t,

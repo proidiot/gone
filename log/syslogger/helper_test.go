@@ -5,67 +5,67 @@ import (
 	"github.com/proidiot/gone/log/pri"
 )
 
-type flagSyslog struct {
-	flag bool
+type flagSyslogger struct {
+	Flag bool
 }
 
-func (f *flagSyslog) Syslog(p pri.Priority, msg interface{}) error {
-	f.flag = true
+func (f *flagSyslogger) Syslog(p pri.Priority, msg interface{}) error {
+	f.Flag = true
 	return nil
 }
 
-type syncFlagSyslog struct {
-	flag bool
+type syncFlagSyslogger struct {
+	Flag bool
 	sync <-chan interface{}
 }
 
-func (s *syncFlagSyslog) Syslog(p pri.Priority, msg interface{}) error {
+func (s *syncFlagSyslogger) Syslog(p pri.Priority, msg interface{}) error {
 	<-s.sync
-	s.flag = true
+	s.Flag = true
 	return nil
 }
 
-func newSyncFlagSyslog() (*syncFlagSyslog, chan<- interface{}) {
+func newSyncFlagSyslogger() (*syncFlagSyslogger, chan<- interface{}) {
 	sc := make(chan interface{})
-	return &syncFlagSyslog{
+	return &syncFlagSyslogger{
 		sync: sc,
 	}, sc
 }
 
-type syncCountSyslog struct {
-	count uint
+type syncCountSyslogger struct {
+	Count uint
 	sync  <-chan interface{}
 }
 
-func (s *syncCountSyslog) Syslog(p pri.Priority, msg interface{}) error {
+func (s *syncCountSyslogger) Syslog(p pri.Priority, msg interface{}) error {
 	<-s.sync
-	s.count++
+	s.Count++
 	return nil
 }
 
-func newSyncCountSyslog() (*syncCountSyslog, chan<- interface{}) {
+func newSyncCountSyslogger() (*syncCountSyslogger, chan<- interface{}) {
 	sc := make(chan interface{})
-	return &syncCountSyslog{
+	return &syncCountSyslogger{
 		sync: sc,
 	}, sc
 }
 
-type errorSyslogError struct {
-	e errors.New
-	s *errorSyslog
+type errorSysloggerError struct {
+	E errors.New
+	S *errorSyslogger
 }
 
-func (e *errorSyslogError) Error() string {
-	return e.e.Error()
+func (e *errorSysloggerError) Error() string {
+	return e.E.Error()
 }
 
-type errorSyslog struct {
+type errorSyslogger struct {
 }
 
-func (es *errorSyslog) Syslog(p pri.Priority, msg interface{}) error {
-	return &errorSyslogError{
-		e: "Syslog called on an errorSyslog",
-		s: es,
+func (es *errorSyslogger) Syslog(p pri.Priority, msg interface{}) error {
+	return &errorSysloggerError{
+		E: "Syslog called on an errorSyslog",
+		S: es,
 	}
 }
 
@@ -76,19 +76,19 @@ func (e errorWriter) Write([]byte) (int, error) {
 	return 0, errors.New("Writing to an errorWriter")
 }
 
-type recordStringSyslog struct {
-	p pri.Priority
-	m string
+type recordStringSyslogger struct {
+	P pri.Priority
+	M string
 }
 
-func (rs *recordStringSyslog) Syslog(p pri.Priority, msg interface{}) error {
+func (rs *recordStringSyslogger) Syslog(p pri.Priority, msg interface{}) error {
 	s, ok := msg.(string)
 	if !ok {
 		return errors.New("Non-string passed to a recordStringSyslog")
 	}
 
-	rs.m = s
-	rs.p = p
+	rs.M = s
+	rs.P = p
 	return nil
 }
 

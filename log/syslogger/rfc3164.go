@@ -2,7 +2,7 @@ package syslogger
 
 import (
 	"fmt"
-	gerrors "github.com/proidiot/gone/errors"
+	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/pri"
 	"os"
 	"time"
@@ -23,7 +23,7 @@ type Rfc3164 struct {
 func (r *Rfc3164) Syslog(p pri.Priority, msg interface{}) error {
 	content, goodType := msg.(string)
 	if !goodType {
-		return gerrors.New(
+		return errors.New(
 			"The syslogger.Rfc3164 expects the message argument" +
 				" to be a string, but the given message does" +
 				" not have the string type.",
@@ -69,14 +69,11 @@ func (r *Rfc3164) Syslog(p pri.Priority, msg interface{}) error {
 	)
 
 	if l := len([]byte(res)); l > 1024 {
-		return gerrors.New(
-			fmt.Sprintf(
-				"The maximum total length of an RFC3164"+
-					" syslog message is 1024 bytes, but"+
-					" the generated syslog message has"+
-					" total length %d bytes.",
-				l,
-			),
+		return fmt.Errorf(
+			"The maximum total length of an RFC3164 syslog"+
+				" message is 1024 bytes, but the generated"+
+				" syslog message has total length %d bytes.",
+			l,
 		)
 	}
 

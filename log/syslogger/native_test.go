@@ -3,7 +3,7 @@ package syslogger
 import (
 	"bufio"
 	"fmt"
-	gerrors "github.com/proidiot/gone/errors"
+	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -67,7 +67,7 @@ func TestNewNativeSyslog(t *testing.T) {
 				syslog.Priority,
 				string,
 			) (*syslog.Writer, error) {
-				return nil, gerrors.New(
+				return nil, errors.New(
 					"Artificial error for syslog.New",
 				)
 			}
@@ -364,17 +364,11 @@ func TestNativeSyslog(t *testing.T) {
 
 			if e != nil {
 				comm <- &content{
-					E: gerrors.New(
-						fmt.Sprintf(
-							"NativeSyslog test"+
-								" expects no"+
-								" error when"+
-								" accepting a"+
-								" new"+
-								" connection:"+
-								" %s",
-							e.Error(),
-						),
+					E: fmt.Errorf(
+						"NativeSyslog test expects no"+
+							" error when accepting"+
+							" a new connection: %s",
+						e.Error(),
 					),
 				}
 				continue
@@ -384,17 +378,12 @@ func TestNativeSyslog(t *testing.T) {
 			rs, e := r.ReadString('\n')
 			if e != nil {
 				comm <- &content{
-					E: gerrors.New(
-						fmt.Sprintf(
-							"NativeSyslog test"+
-								" expects no"+
-								" error when"+
-								" reading"+
-								" with a"+
-								" syslog"+
-								" reader: %s",
-							e,
-						),
+					E: fmt.Errorf(
+						"NativeSyslog test expects no"+
+							" error when reading"+
+							" with a syslog"+
+							" reader: %s",
+						e,
 					),
 				}
 				c.Close()
@@ -404,16 +393,11 @@ func TestNativeSyslog(t *testing.T) {
 			e = c.Close()
 			if e != nil {
 				comm <- &content{
-					E: gerrors.New(
-						fmt.Sprintf(
-							"NativeSyslog test"+
-								" expects no"+
-								" error when"+
-								" closing a"+
-								" syslog"+
-								" reader: %s",
-							e,
-						),
+					E: fmt.Errorf(
+						"NativeSyslog test expects no"+
+							" error when closing a"+
+							" syslog reader: %s",
+						e,
 					),
 				}
 				continue
