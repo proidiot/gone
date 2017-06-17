@@ -13,8 +13,8 @@ import (
 // to another syslogger.Syslogger.
 type Rfc3164 struct {
 	Syslogger Syslogger
-	Facility  pri.Priority
 	Ident     string
+	Facility  pri.Priority
 	Pid       bool
 }
 

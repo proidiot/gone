@@ -13,8 +13,8 @@ import (
 // syslogger.Syslogger.
 type HumanReadable struct {
 	Syslogger Syslogger
-	Facility  pri.Priority
 	Ident     string
+	Facility  pri.Priority
 	Pid       bool
 }
 
