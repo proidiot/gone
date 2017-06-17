@@ -23,6 +23,8 @@ func (n *NoWait) Syslog(p pri.Priority, msg interface{}) error {
 		)
 	}
 
-	go n.Syslogger.Syslog(p, msg)
+	go func() {
+		_ = n.Syslogger.Syslog(p, msg)
+	}()
 	return nil
 }
