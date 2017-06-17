@@ -116,7 +116,7 @@ func TestHumanReadableSyslog(t *testing.T) {
 		actualError := h.Syslog(test.inputPiority, test.inputMsg)
 
 		if test.expectedError {
-			assert.Error(
+			assert.Errorf(
 				t,
 				actualError,
 				"HumanReadable test expects an error for: %s",

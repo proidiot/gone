@@ -89,7 +89,7 @@ func TestPriValidFacility(t *testing.T) {
 		actualError := test.input.ValidFacility()
 
 		if test.errorExpected {
-			assert.Error(
+			assert.Errorf(
 				t,
 				actualError,
 				"ValidFacility test had false negative for"+

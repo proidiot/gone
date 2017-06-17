@@ -44,7 +44,7 @@ func TestOpenlog(t *testing.T) {
 		)
 
 		if test.expectedError {
-			assert.Error(
+			assert.Errorf(
 				t,
 				actualError,
 				"Openlog test expects an error for: %s",
@@ -162,7 +162,7 @@ func TestSyslogWrappers(t *testing.T) {
 		actualError := test.callFunc(expectedMsg)
 
 		if test.expectedError {
-			assert.Error(
+			assert.Errorf(
 				t,
 				actualError,
 				"Syslog wrapper test expects an error for: %s",

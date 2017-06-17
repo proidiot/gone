@@ -143,7 +143,7 @@ func TestMultiSyslog(t *testing.T) {
 		actualError := m.Syslog(pri.Priority(0x0), nil)
 
 		if test.expectedError {
-			assert.Error(
+			assert.Errorf(
 				t,
 				actualError,
 				"Multi test expected error for: %s",

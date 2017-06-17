@@ -141,7 +141,7 @@ func TestRfc3164Syslog(t *testing.T) {
 		actualError := h.Syslog(test.inputPiority, test.inputMsg)
 
 		if test.expectedError {
-			assert.Error(
+			assert.Errorf(
 				t,
 				actualError,
 				"Rfc3164 test expects an error for: %s",

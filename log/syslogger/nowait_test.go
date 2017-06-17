@@ -40,7 +40,7 @@ func TestNoWaitSyslog(t *testing.T) {
 		actualError := n.Syslog(pri.Priority(0x0), nil)
 
 		if test.expectedError {
-			assert.Error(
+			assert.Errorf(
 				t,
 				actualError,
 				"NoWait test expected error for: %s",

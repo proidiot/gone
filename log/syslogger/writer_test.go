@@ -72,7 +72,7 @@ func TestWriterSyslog(t *testing.T) {
 		)
 
 		if test.expectedError {
-			assert.Error(
+			assert.Errorf(
 				t,
 				actualError,
 				"Writer test expected error for: %s",

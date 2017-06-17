@@ -67,7 +67,7 @@ func TestSeverityMaskSyslog(t *testing.T) {
 		actualError := s.Syslog(test.inputPri, nil)
 
 		if test.expectedError {
-			assert.Error(
+			assert.Errorf(
 				t,
 				actualError,
 				"SeverityMask test expected error for: %s",

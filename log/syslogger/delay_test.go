@@ -58,7 +58,7 @@ func TestDelayNewDelay(t *testing.T) {
 		n, actualNewDelayError := NewDelay(test.inputCb)
 
 		if test.expectedNewDelayError {
-			assert.Error(
+			assert.Errorf(
 				t,
 				actualNewDelayError,
 				"Delay test expected error for: %s",
@@ -77,7 +77,7 @@ func TestDelayNewDelay(t *testing.T) {
 			actualError := n.Syslog(pri.Priority(0x0), nil)
 
 			if test.expectedSyslogError {
-				assert.Error(
+				assert.Errorf(
 					t,
 					actualError,
 					"Delay test expected error for: %s",

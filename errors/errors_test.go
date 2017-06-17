@@ -31,8 +31,27 @@ func TestErrors(t *testing.T) {
 
 	for k, v := range testData {
 		e := errorIdentity(v)
-		assert.Error(t, e)
-		assert.Equal(t, e, v)
-		assert.Equal(t, e.Error(), k)
+		assert.Errorf(
+			t,
+			e,
+			"Error creation test produced a non-error for: %s",
+			k,
+		)
+		assert.Equal(
+			t,
+			e,
+			v,
+			"Error creation test produced an error that was not a"+
+				" literal cast for: %s",
+			k,
+		)
+		assert.Equal(
+			t,
+			e.Error(),
+			k,
+			"Error creation test produced an error with the wrong"+
+				" string form for: %s",
+			k,
+		)
 	}
 }

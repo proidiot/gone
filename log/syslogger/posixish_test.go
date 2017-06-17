@@ -205,7 +205,7 @@ func TestPosixishOpenlog(t *testing.T) {
 		)
 
 		if test.expectedError {
-			assert.Error(
+			assert.Errorf(
 				t,
 				actualError,
 				"Posixish Openlog test expects an error for:"+
@@ -358,7 +358,7 @@ func TestPosixishSyslog(t *testing.T) {
 		actualError := p.Syslog(test.inputPriority, test.inputMsg)
 
 		if test.expectedError {
-			assert.Error(
+			assert.Errorf(
 				t,
 				actualError,
 				"Posixish Syslog test expects an error for: %s",
@@ -437,7 +437,7 @@ func TestPosixishSetLogMask(t *testing.T) {
 		actualError := p.SetLogMask(test.inputMask)
 
 		if test.expectedError {
-			assert.Error(
+			assert.Errorf(
 				t,
 				actualError,
 				"Posixish SetLogMask test expects an error"+
@@ -489,7 +489,7 @@ func TestPosixishCloseError(t *testing.T) {
 
 	actualError := p.Openlog("", opt.NDelay, pri.Priority(0x0))
 
-	assert.Error(
+	assert.Errorf(
 		t,
 		actualError,
 		"Posixish Close error test expects an error.",

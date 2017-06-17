@@ -88,7 +88,7 @@ func TestNewNativeSyslog(t *testing.T) {
 		)
 
 		if test.expectedError {
-			assert.Error(
+			assert.Errorf(
 				t,
 				actualError,
 				"NewNativeSyslog test expects an error for: %s",
@@ -258,7 +258,7 @@ func TestDialNativeSyslog(t *testing.T) {
 		)
 
 		if test.expectedError {
-			assert.Error(
+			assert.Errorf(
 				t,
 				actualError,
 				"DialNativeSyslog test expects an error for:"+
@@ -483,7 +483,7 @@ func TestNativeSyslog(t *testing.T) {
 		actualError := n.Syslog(test.inputPriority, test.inputMsg)
 
 		if test.expectedError {
-			assert.Error(
+			assert.Errorf(
 				t,
 				actualError,
 				"NativeSyslog test expects an error for: %s",

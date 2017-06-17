@@ -78,7 +78,7 @@ func TestFallthroughSyslog(t *testing.T) {
 		actualError := f.Syslog(pri.Priority(0x0), nil)
 
 		if test.expectedError {
-			assert.Error(
+			assert.Errorf(
 				t,
 				actualError,
 				"Fallthrough test expected error for: %s",
