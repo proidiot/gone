@@ -21,7 +21,7 @@ func TestPosixishOpenlog(t *testing.T) {
 	}()
 	fakeNewNativeSyslog := func(
 		f pri.Priority,
-		s string,
+		_ string,
 	) (*NativeSyslog, error) {
 		return &NativeSyslog{
 			w: &syslog.Writer{},

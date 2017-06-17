@@ -26,11 +26,7 @@ func (t *testSyslogger) Syslog(p pri.Priority, msg interface{}) error {
 	return t.triggerError()
 }
 
-func (t *testSyslogger) Openlog(
-	ident string,
-	o opt.Option,
-	f pri.Priority,
-) error {
+func (t *testSyslogger) Openlog(string, opt.Option, pri.Priority) error {
 	return t.triggerError()
 }
 
