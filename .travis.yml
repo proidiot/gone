@@ -1,14 +1,8 @@
 language: go
 sudo: false
 before_install:
-        - .travis/gofmt.sh
         - .travis/longlines.sh
-        - go get -t -u -v ./...
-        - go get -t -u -v github.com/golang/lint/golint
-        - .travis/golint.sh
-        - go get -t -u -v github.com/alecthomas/gometalinter
-        - gometalinter -i -u
-        - gometalinter -d --enable-all --deadline=600s --enable-gc --cyclo-over=15 ./...
+        - .travis/gometalinter.sh
         - go get github.com/mattn/goveralls
 script:
         - $HOME/gopath/bin/goveralls -service=travis-ci
