@@ -2,9 +2,10 @@ package syslogger
 
 import (
 	"bytes"
+	"testing"
+
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestWriterSyslog(t *testing.T) {

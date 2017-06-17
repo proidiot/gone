@@ -2,10 +2,11 @@ package syslogger
 
 import (
 	"fmt"
-	"github.com/proidiot/gone/errors"
-	"github.com/proidiot/gone/log/pri"
 	"os"
 	"time"
+
+	"github.com/proidiot/gone/errors"
+	"github.com/proidiot/gone/log/pri"
 )
 
 // Rfc3164 is a syslogger.Syslogger that will format the message in a way that

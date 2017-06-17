@@ -1,9 +1,10 @@
 package syslogger
 
 import (
+	"sync"
+
 	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/pri"
-	"sync"
 )
 
 type sysloggerHandle struct {

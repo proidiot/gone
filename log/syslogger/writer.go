@@ -1,9 +1,10 @@
 package syslogger
 
 import (
+	"io"
+
 	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/pri"
-	"io"
 )
 
 // Writer is a syslogger.Syslogger that writes messages directly to an

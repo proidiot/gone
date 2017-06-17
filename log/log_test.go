@@ -1,10 +1,11 @@
 package log
 
 import (
+	"testing"
+
 	"github.com/proidiot/gone/log/opt"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestOpenlog(t *testing.T) {

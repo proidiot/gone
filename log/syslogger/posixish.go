@@ -1,13 +1,14 @@
 package syslogger
 
 import (
+	"io"
+	"os"
+	"sync"
+
 	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/mask"
 	"github.com/proidiot/gone/log/opt"
 	"github.com/proidiot/gone/log/pri"
-	"io"
-	"os"
-	"sync"
 )
 
 // Posixish is a syslogger.Syslogger that behaves much like the syslog system

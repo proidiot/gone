@@ -1,9 +1,10 @@
 package syslogger
 
 import (
+	"testing"
+
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestMultiSyslog(t *testing.T) {

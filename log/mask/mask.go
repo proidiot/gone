@@ -2,9 +2,10 @@ package mask
 
 import (
 	"fmt"
-	"github.com/proidiot/gone/log/pri"
 	"os"
 	"strings"
+
+	"github.com/proidiot/gone/log/pri"
 )
 
 // Mask represents a log severity mask

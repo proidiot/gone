@@ -2,9 +2,10 @@ package syslogger
 
 import (
 	"fmt"
+	"log/syslog"
+
 	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/pri"
-	"log/syslog"
 )
 
 // NativeSyslog is a syslogger.Syslogger that is a lightweight wrapper around

@@ -1,11 +1,12 @@
 package syslogger
 
 import (
+	"regexp"
+	"testing"
+
 	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
-	"regexp"
-	"testing"
 )
 
 func TestRfc3164Syslog(t *testing.T) {

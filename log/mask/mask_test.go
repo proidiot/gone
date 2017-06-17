@@ -1,10 +1,11 @@
 package mask
 
 import (
-	"github.com/proidiot/gone/log/pri"
-	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
+
+	"github.com/proidiot/gone/log/pri"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMaskUpTo(t *testing.T) {

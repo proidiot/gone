@@ -3,14 +3,15 @@ package syslogger
 import (
 	"bufio"
 	"fmt"
-	"github.com/proidiot/gone/errors"
-	"github.com/proidiot/gone/log/pri"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"log/syslog"
 	"net"
 	"regexp"
 	"testing"
+
+	"github.com/proidiot/gone/errors"
+	"github.com/proidiot/gone/log/pri"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewNativeSyslog(t *testing.T) {

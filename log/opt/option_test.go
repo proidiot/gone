@@ -1,9 +1,10 @@
 package opt
 
 import (
-	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestOptGetFromEnv(t *testing.T) {

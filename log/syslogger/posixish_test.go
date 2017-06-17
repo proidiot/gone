@@ -1,16 +1,17 @@
 package syslogger
 
 import (
+	"io"
+	"log/syslog"
+	"os"
+	"testing"
+
 	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/mask"
 	"github.com/proidiot/gone/log/opt"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"io"
-	"log/syslog"
-	"os"
-	"testing"
 )
 
 func TestPosixishOpenlog(t *testing.T) {

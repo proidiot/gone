@@ -1,12 +1,13 @@
 package log
 
 import (
+	"os"
+
 	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/mask"
 	"github.com/proidiot/gone/log/opt"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/proidiot/gone/log/syslogger"
-	"os"
 )
 
 var log syslogger.Syslogger

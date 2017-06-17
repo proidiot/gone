@@ -1,10 +1,11 @@
 package syslogger
 
 import (
+	"testing"
+
 	"github.com/proidiot/gone/errors"
 	"github.com/proidiot/gone/log/pri"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestDelayNewDelay(t *testing.T) {

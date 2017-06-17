@@ -2,8 +2,9 @@ package pri
 
 import (
 	"fmt"
-	"github.com/proidiot/gone/errors"
 	"os"
+
+	"github.com/proidiot/gone/errors"
 )
 
 // Priority represents a log priority (bitwise or of facility and severity).
