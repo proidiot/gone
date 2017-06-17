@@ -160,7 +160,9 @@ func TestDialNativeSyslog(t *testing.T) {
 		"DialNativeSyslog test expects no error when creating the"+
 			" default udp listener.",
 	)
-	defer udpListener.Close()
+	defer func() {
+		_ = udpListener.Close()
+	}()
 	udpRaddr := udpListener.LocalAddr().String()
 
 	tcpNetwork := "tcp"
@@ -171,7 +173,9 @@ func TestDialNativeSyslog(t *testing.T) {
 		"DialNativeSyslog test expects no error when creating the"+
 			" default tcp listener.",
 	)
-	defer tcpListener.Close()
+	defer func() {
+		_ = tcpListener.Close()
+	}()
 	tcpRaddr := tcpListener.Addr().String()
 
 	unixNetwork := "unix"
@@ -182,7 +186,9 @@ func TestDialNativeSyslog(t *testing.T) {
 		"DialNativeSyslog test expects no error when creating the"+
 			" default unix listener.",
 	)
-	defer unixListener.Close()
+	defer func() {
+		_ = unixListener.Close()
+	}()
 	unixRaddr := unixListener.Addr().String()
 
 	badNetwork := "tcp4"
@@ -322,7 +328,7 @@ func TestNativeSyslog(t *testing.T) {
 		}
 		go func(cancel <-chan interface{}, l net.Listener) {
 			<-cancel
-			l.Close()
+			_ = l.Close()
 		}(cancel, l)
 		raddr := l.Addr().String()
 		comm <- &content{S: raddr}
@@ -364,7 +370,7 @@ func TestNativeSyslog(t *testing.T) {
 						e,
 					),
 				}
-				c.Close()
+				_ = c.Close()
 				continue
 			}
 

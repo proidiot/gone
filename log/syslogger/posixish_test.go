@@ -62,7 +62,7 @@ func TestPosixishOpenlog(t *testing.T) {
 	)
 	origOsStderr := posixishOsStderr
 	defer func() {
-		devNull.Close()
+		_ = devNull.Close()
 		posixishOsStderr = origOsStderr
 	}()
 	posixishOsStderr = devNull
@@ -244,7 +244,8 @@ func TestPosixishOpenlog(t *testing.T) {
 			explanation,
 		)
 
-		p.Close()
+		// Closing an empty file will cause errors we can ignore.
+		_ = p.Close()
 	}
 }
 
@@ -278,7 +279,7 @@ func TestPosixishSyslog(t *testing.T) {
 	)
 	origOsStderr := posixishOsStderr
 	defer func() {
-		devNull.Close()
+		_ = devNull.Close()
 		posixishOsStderr = origOsStderr
 	}()
 	posixishOsStderr = devNull
@@ -332,7 +333,18 @@ func TestPosixishSyslog(t *testing.T) {
 		p := new(Posixish)
 
 		if test.causeBlankOpenlog {
-			p.Openlog("", opt.Option(0x0), pri.Priority(0x0))
+			openError := p.Openlog(
+				"",
+				opt.Option(0x0),
+				pri.Priority(0x0),
+			)
+			assert.NoError(
+				t,
+				openError,
+				"Posixish Syslog test expects no error during"+
+					" Openlog for: %s",
+				explanation,
+			)
 		}
 		if test.causeOpenlogError {
 			p.o |= opt.NoFallback
@@ -403,7 +415,18 @@ func TestPosixishSetLogMask(t *testing.T) {
 		p := new(Posixish)
 
 		if test.causeBlankOpenlog {
-			p.Openlog("", opt.Option(0x0), pri.Priority(0x0))
+			openError := p.Openlog(
+				"",
+				opt.Option(0x0),
+				pri.Priority(0x0),
+			)
+			assert.NoError(
+				t,
+				openError,
+				"Posixish SetLogMask test expects no error"+
+					" during Openlog for: %s",
+				explanation,
+			)
 		}
 		if test.causeNewDelayError {
 			posixishNewDelay = errorNewDelay

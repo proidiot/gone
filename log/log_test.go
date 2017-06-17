@@ -59,7 +59,16 @@ func TestOpenlog(t *testing.T) {
 			)
 		}
 
-		Closelog()
+		closeError := Closelog()
+		if !test.useLimitedSyslogger {
+			assert.NoError(
+				t,
+				closeError,
+				"Openlog test expects no error on Closelog"+
+					" for: %s",
+				explanation,
+			)
+		}
 	}
 }
 
@@ -190,6 +199,15 @@ func TestSyslogWrappers(t *testing.T) {
 			explanation,
 		)
 
-		Closelog()
+		closeError := Closelog()
+		if !test.causeSyslogError {
+			assert.NoError(
+				t,
+				closeError,
+				"Syslog wrapper test expects Closelog to have"+
+					" no error for: %s",
+				explanation,
+			)
+		}
 	}
 }
