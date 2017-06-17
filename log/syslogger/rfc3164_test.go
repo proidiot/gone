@@ -37,11 +37,11 @@ func TestRfc3164Syslog(t *testing.T) {
 			expectedError: true,
 		},
 		"full values": {
+			inputPiority:     pri.Priority(0xFF),
+			inputMsg:         "full values message",
 			inputFacility:    pri.Priority(0xFF),
 			inputIdent:       "full values ident",
 			inputPid:         true,
-			inputPiority:     pri.Priority(0xFF),
-			inputMsg:         "full values message",
 			expectedError:    false,
 			expectedPriority: pri.Priority(0x0),
 			expectedMsg: regexp.MustCompile(
