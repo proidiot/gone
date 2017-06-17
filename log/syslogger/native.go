@@ -39,7 +39,7 @@ func (n *NativeSyslog) Syslog(p pri.Priority, msg interface{}) error {
 				" given pri.Priority argument has"+
 				" pri.Facility: %s",
 			n.f,
-			p.Facility,
+			p.Facility(),
 		)
 	}
 
