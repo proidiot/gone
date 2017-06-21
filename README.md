@@ -6,5 +6,6 @@ gone
 [![Go Report Card](https://goreportcard.com/badge/github.com/proidiot/gone)](https://goreportcard.com/report/github.com/proidiot/gone)
 [![GoDoc](https://godoc.org/github.com/proidiot/gone?status.svg)](https://godoc.org/github.com/proidiot/gone)
 [![Issues in Backlog](https://img.shields.io/github/issues-raw/proidiot/gone.svg)](https://waffle.io/proidiot/gone)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1063/badge)](https://bestpractices.coreinfrastructure.org/projects/1063)
  
 Tidbits I wanted in Go but weren't there. Maybe I just need to learn the "right" way, but until then...
