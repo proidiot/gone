@@ -98,3 +98,11 @@ type errorCloser struct {
 func (e *errorCloser) Close() error {
 	return errors.New("Closing an errorCloser")
 }
+
+type stringer struct {
+	S string
+}
+
+func (s *stringer) String() string {
+	return string(s.S)
+}
