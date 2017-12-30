@@ -192,11 +192,13 @@ func (px *Posixish) openlog() (Syslogger, error) {
 			)
 		}
 	} else {
-		es := &Rfc3164{
-			Syslogger: &Writer{posixishOsStderr},
-			Facility:  px.f,
-			Ident:     px.i,
-			Pid:       (px.o & opt.Pid) != 0,
+		es := &Newliner{
+			Syslogger: &Rfc3164{
+				Syslogger: &Writer{posixishOsStderr},
+				Facility:  px.f,
+				Ident:     px.i,
+				Pid:       (px.o & opt.Pid) != 0,
+			},
 		}
 
 		if l == nil {

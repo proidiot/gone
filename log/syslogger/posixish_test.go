@@ -112,7 +112,7 @@ func TestPosixishOpenlog(t *testing.T) {
 			inputOptions:              opt.NDelay,
 			causeNewNativeSyslogError: true,
 			expectedError:             false,
-			expectedSysloggerType:     &Rfc3164{},
+			expectedSysloggerType:     &Newliner{},
 			expectedClosers:           []io.Closer{},
 		},
 		"no delay, cons": {
