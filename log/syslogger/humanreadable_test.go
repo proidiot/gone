@@ -11,7 +11,7 @@ import (
 
 func TestHumanReadableSyslog(t *testing.T) {
 	dateregex := `.*`
-	hostregex := `[0-9A-Za-z][-0-9A-Za-z]*[0-9A-Za-z]`
+	hostregex := `[0-9A-Za-z][-.0-9A-Za-z]*[0-9A-Za-z]`
 
 	type testCase struct {
 		inputFacility        pri.Priority
