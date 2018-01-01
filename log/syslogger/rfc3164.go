@@ -3,6 +3,7 @@ package syslogger
 import (
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/proidiot/gone/errors"
@@ -41,9 +42,12 @@ func (r *Rfc3164) Syslog(p pri.Priority, msg interface{}) error {
 
 	timestamp := time.Now().Format(time.Stamp)
 
-	hostname, e := osHostname()
+	var hostname string
+	fullHostname, e := osHostname()
 	if e != nil {
 		hostname = "localhost"
+	} else {
+		hostname = strings.SplitN(fullHostname, ".", 2)[0]
 	}
 
 	tag := r.Ident
