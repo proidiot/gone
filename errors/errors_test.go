@@ -27,7 +27,7 @@ func TestErrors(t *testing.T) {
 		"error3": error3,
 		"error4": New("error4"),
 		"error5": ErrorString("error5"),
-		"error6": New(fmt.Sprintf("%s", "error6")),
+		"error6": New(fmt.Sprintf("error%d", 6)),
 	}
 
 	for k, v := range testData {
