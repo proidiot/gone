@@ -273,7 +273,7 @@ func TestPriGetFromEnv(t *testing.T) {
 			t,
 			test.expected,
 			actual,
-			"GetFromEnv test failed for: %s",
+			"pri.GetFromEnv test failed for: %s",
 			explanation,
 		)
 	}

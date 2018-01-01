@@ -231,7 +231,7 @@ func TestMaskGetFromEnv(t *testing.T) {
 			t,
 			test.expected,
 			actual,
-			"GetFromEnv test failed for: %s",
+			"mask.GetFromEnv test failed for: %s",
 			explanation,
 		)
 	}
