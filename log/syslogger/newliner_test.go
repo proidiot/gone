@@ -8,16 +8,16 @@ import (
 )
 
 func TestNewlinerSyslog(tt *testing.T) {
-	tests := map[string]struct{
+	tests := map[string]struct {
 		inputPri       pri.Priority
 		inputMsg       interface{}
 		expectedError  bool
 		expectedOutput string
 	}{
 		"zero values": {
-			inputPri:       pri.Priority(0x00),
-			inputMsg:       []byte{},
-			expectedError:  true,
+			inputPri:      pri.Priority(0x00),
+			inputMsg:      []byte{},
+			expectedError: true,
 		},
 		"full values": {
 			inputPri:      pri.Priority(0xFF),

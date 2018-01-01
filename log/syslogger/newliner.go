@@ -25,8 +25,8 @@ func (n *Newliner) Syslog(p pri.Priority, msg interface{}) error {
 		s = m
 	default:
 		return errors.New(
-			"The *syslogger.Newliner does not support message"+
-				" types other than fmt.Stringer and string,"+
+			"The *syslogger.Newliner does not support message" +
+				" types other than fmt.Stringer and string," +
 				" but the given message has a different type.",
 		)
 	}
@@ -35,5 +35,5 @@ func (n *Newliner) Syslog(p pri.Priority, msg interface{}) error {
 		return n.Syslogger.Syslog(p, s)
 	}
 
-	return n.Syslogger.Syslog(p, s + "\n")
+	return n.Syslogger.Syslog(p, s+"\n")
 }
