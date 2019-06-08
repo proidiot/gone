@@ -4,8 +4,8 @@ import (
 	"fmt"
 )
 
-// Wrapper provides a convenient mechanism for wrapping a number of erros with
-// a common prefix.
+// Wrapper provides a convenient mechanism for wrapping a number of errors
+// with a common prefix.
 type Wrapper string
 
 // AppendedWith gives another Wrapper with the additional string appended to
