@@ -2,7 +2,7 @@ language: go
 sudo: false
 before_install:
         - .travis/longlines.sh
-        - .travis/gometalinter.sh
+        - .travis/golangci-lint.sh
         - go get github.com/mattn/goveralls
 script:
         - $HOME/gopath/bin/goveralls -service=travis-ci
